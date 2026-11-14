@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ard (أرض): Plot 67, Al-Ammariyah</title>
+<meta name="description" content="Everything satellites, terrain models and climate records can tell about one 3.6 ha plot in Al-Ammariyah, west of Riyadh.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="lib/maplibre-gl.css" rel="stylesheet">
+<script src="lib/maplibre-gl.js"></script>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f4f1ea; --surface:#fffdf8; --surface-2:#f0ebe0; --ink:#1d1a15; --muted:#5f584c; --faint:#8a8273; --line:#e2dbcc;
+  --sand:#c9a46a; --accent:#b8661f; --plot:#ffcf3d;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s5:#e87ba4;
+  --warn:#a8611b; --good:#1f7a4a;
+  --font-body:"IBM Plex Sans","IBM Plex Sans Arabic","Segoe UI",system-ui,sans-serif;
+  --font-ar:"IBM Plex Sans Arabic","IBM Plex Sans",system-ui,sans-serif;
+  --font-num:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --bg:#13110e; --surface:#1b1915; --surface-2:#24211b; --ink:#efe9dd; --muted:#b5ac9b; --faint:#8a8273; --line:#332e26;
+    --sand:#d8b47a; --accent:#e08a3c; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s5:#d55181; --warn:#e0a35c; --good:#4fbf83;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#13110e; --surface:#1b1915; --surface-2:#24211b; --ink:#efe9dd; --muted:#b5ac9b; --faint:#8a8273; --line:#332e26;
+  --sand:#d8b47a; --accent:#e08a3c; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s5:#d55181; --warn:#e0a35c; --good:#4fbf83;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55}
+a{color:var(--accent)}
+.num{font-family:var(--font-num);font-feature-settings:"tnum"}
+.ar{font-family:var(--font-ar);direction:rtl;unicode-bidi:isolate}
+header.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 20px}
+.brand{font-weight:700;letter-spacing:.2px;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.brand .ar{color:var(--accent);margin-left:6px}
+nav.links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+nav.links a{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:8px;white-space:nowrap}
+nav.links a:hover,nav.links a.on{background:var(--surface-2);color:var(--ink)}
+button,select,input{font:inherit;color:inherit}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:6px 12px;cursor:pointer;font-size:14px}
+.btn:hover{border-color:var(--sand)}
+.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+main{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+section{padding:56px 0 8px;border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+h1{font-size:clamp(30px,4.4vw,50px);line-height:1.08;margin:0 0 14px;letter-spacing:-.5px}
+h2{font-size:28px;margin:0 0 4px;letter-spacing:-.3px}
+h2 .ar{font-size:20px;color:var(--faint);font-weight:500;margin-left:10px}
+h3{font-size:17px;margin:0 0 8px}
+.lede{font-size:18px;color:var(--muted);max-width:780px;margin:0 0 22px}
+.kicker{font-family:var(--font-num);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+p{max-width:780px}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.g3,.g4{grid-template-columns:minmax(0,1fr)}.timeline .lab{min-width:0;font-size:11.5px}.maplegend{display:none}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.tile .v{font-family:var(--font-num);font-size:26px;font-weight:500;letter-spacing:-.5px}
+.tile .v small{font-size:14px;color:var(--muted);margin-left:3px}
+.tile .k{font-size:13.5px;color:var(--muted)}
+.tile .n{font-size:12.5px;color:var(--faint);margin-top:4px}
+.hero{padding:44px 0 6px}
+.flag{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);margin:10px 0}
+.flag.ok{border-left-color:var(--good)}
+.flag b{display:block}
+.flag .ic{font-weight:700;color:var(--warn);font-family:var(--font-num)}
+.flag.ok .ic{color:var(--good)}
+/* map */
+.mapwrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);height:min(72vh,680px);min-height:440px;background:#2a261f}
+#map{position:absolute;inset:0}
+.mapbar{position:absolute;left:12px;top:12px;z-index:5;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 24px)}
+.mapbar .btn{background:rgba(20,18,14,.78);color:#f3ecdf;border-color:rgba(255,255,255,.18);backdrop-filter:blur(6px)}
+.mapbar .btn.on{background:#f3ecdf;color:#1d1a15}
+.timeline{position:absolute;left:12px;right:12px;bottom:12px;z-index:5;background:rgba(20,18,14,.82);color:#f3ecdf;border-radius:12px;padding:10px 14px;backdrop-filter:blur(6px);display:flex;gap:14px;align-items:center}
+.timeline input{flex:1;accent-color:#ffcf3d}
+.timeline .lab{font-family:var(--font-num);font-size:13px;min-width:210px}
+.maplegend{position:absolute;right:12px;top:12px;z-index:5;background:rgba(20,18,14,.78);color:#f3ecdf;border-radius:10px;padding:8px 11px;font-size:12.5px;line-height:1.7}
+.sw{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
+.maplibregl-popup-content{background:var(--surface);color:var(--ink);border-radius:10px;font-size:13px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.cmark{width:24px;height:24px;border-radius:50%;background:#1d1a15;color:#ffcf3d;border:2px solid #ffcf3d;font:600 12px var(--font-body);cursor:pointer;padding:0}
+.maplibregl-popup-tip{border-top-color:var(--surface)!important;border-bottom-color:var(--surface)!important}
+/* charts */
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .ax text{fill:var(--faint);font-size:11px;font-family:var(--font-num)}
+.chart .ax line,.chart .ax path{stroke:var(--line)}
+.chart .grid line{stroke:var(--line);stroke-dasharray:2 3}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:7px 9px;border-radius:8px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .08s;z-index:4;font-family:var(--font-num);line-height:1.45}
+.tip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:2px 0 8px}
+.legend span i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.ctitle{font-weight:600;font-size:15px;margin-bottom:2px}
+.csub{font-size:13px;color:var(--muted);margin-bottom:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.6px}
+td.num,th.num{text-align:right}
+tr.bad td{background:color-mix(in srgb,var(--warn) 10%,transparent)}
+.ctl{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.ctl label{font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+.ctl label b{color:var(--ink);font-family:var(--font-num);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:none;background:var(--surface);padding:6px 12px;cursor:pointer;font-size:13.5px}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.big{font-family:var(--font-num);font-size:34px;letter-spacing:-.8px}
+.opt h3{display:flex;justify-content:space-between;gap:8px}
+.tag{font-size:11.5px;font-family:var(--font-num);padding:2px 7px;border-radius:20px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.kv{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px;margin:8px 0}
+.kv span:nth-child(odd){color:var(--muted)}
+.kv span:nth-child(even){font-family:var(--font-num);text-align:right}
+.opt .kv{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.opt .kv span:nth-child(even){font-size:13px}
+footer{max-width:1180px;margin:0 auto;padding:30px 20px 60px;color:var(--faint);font-size:13px;border-top:1px solid var(--line)}
+details summary{cursor:pointer;color:var(--accent);font-size:14px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sources li{margin:3px 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="#top">Ard<span class="ar">أرض</span></a>
+  <nav class="links" id="nav">
+    <a href="#map-sec">Map</a><a href="#survey">Survey check</a><a href="#terrain">Terrain &amp; water</a><a href="#climate">Climate</a><a href="#sun">Sun &amp; qibla</a><a href="#solar">Solar</a><a href="#sat">Satellite record</a><a href="#options">What it could be</a><a href="#value">Value</a><a href="#method">Method</a>
+  </nav>
+  <button class="btn" id="theme" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button>
+</div></header>
+
+<main id="top">
+<section class="hero">
+  <div class="kicker">Plot 67 · Plan 623 · Al-Ammariyah, Riyadh</div>
+  <h1>A 3.6 hectare hillside, read from orbit.</h1>
+  <p class="lede">This page puts one plot of land under every free scientific dataset that covers it: the survey's own coordinates, a 30 m terrain model, 25 years of NASA weather, 75 years of climate reanalysis, 11 years of Sentinel-2 passes and 40 years of Landsat. Everything is computed for this exact polygon.</p>
+  <div class="grid g4" id="tiles"></div>
+</section>
+
+<section id="map-sec">
+  <h2>The plot <span class="ar">القطعة</span></h2>
+  <p class="muted">Satellite view with the surveyed boundary. Switch to 3D to see the ridge, turn on drainage lines, and drag the slider to go back in time to 1987. Click anywhere for elevation and distance.</p>
+  <div class="mapwrap">
+    <div id="map" role="region" aria-label="Map of the plot"></div>
+    <div class="mapbar">
+      <button class="btn" id="b3d">3D terrain</button>
+      <button class="btn on" id="bstreams">Drainage</button>
+      <button class="btn" id="bqibla">Qibla</button>
+      <button class="btn" id="bcorners">Corner coordinates</button>
+      <button class="btn" id="bzoom">Zoom out</button>
+    </div>
+    <div class="maplegend">
+      <div><span class="sw" style="background:#ffcf3d"></span>Plot boundary</div>
+      <div><span class="sw" style="background:#59b9ff"></span>Drainage (wider = bigger catchment)</div>
+      <div id="lgq" style="display:none"><span class="sw" style="background:#6ee7a6"></span>Qibla direction</div>
+    </div>
+    <div class="timeline">
+      <span class="small" style="opacity:.8">Time</span>
+      <input type="range" id="tl" min="0" max="17" value="17" aria-label="Imagery year">
+      <span class="lab" id="tllab">Today · high-res (Esri)</span>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:8px">Old imagery is 30 m Landsat (1987 to 2014) and 10 m Sentinel-2 (2016 to 2026), loaded live from Microsoft Planetary Computer. The plot is about 8 Landsat pixels wide, so expect it to look soft.</p>
+</section>
+
+<section id="survey">
+  <h2>Survey check <span class="ar">تدقيق الكروكي</span></h2>
+  <p class="lede">The survey sheet gives the corners twice: as UTM metres (WGS-84, zone 38N) and as latitude/longitude. I recomputed every length, angle and the area from those coordinates.</p>
+  <div class="grid g2">
+    <div class="card"><div class="chart" id="shape"></div></div>
+    <div>
+      <div id="flags"></div>
+      <div class="card" style="margin-top:12px;overflow-x:auto"><table id="sides"></table></div>
+    </div>
+  </div>
+</section>
+
+<section id="terrain">
+  <h2>Terrain &amp; water <span class="ar">التضاريس والسيول</span></h2>
+  <p class="lede">The plot is not flat. It sits on the back slope of one of the long limestone ridges west of Wadi Hanifa, with its north-west edge running along the ridge crest.</p>
+  <div class="grid g4" id="ttiles"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><div class="ctitle">West to east cross-section</div><div class="csub">Through the plot centre. Shaded = inside the plot. Copernicus 30 m DEM.</div><div class="chart" id="profWE"></div></div>
+    <div class="card"><div class="ctitle">North to south cross-section</div><div class="csub">Through the plot centre.</div><div class="chart" id="profNS"></div></div>
+    <div class="card"><div class="ctitle">How steep is the ground?</div><div class="csub">Share of the plot by slope (5 m samples of the 30 m DEM)</div><div class="chart" id="slopes"></div></div>
+    <div class="card"><div class="ctitle">Which way it faces</div><div class="csub">Share of the plot by downhill direction</div><div class="chart" id="rose"></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="flag ok"><span class="ic">✓</span><div><b>Water runs off this plot, not onto it.</b><span class="small">Flow routing on the terrain model shows the plot is at the top of its own small catchment: the most water any cell inside it collects is from about 2.6 ha. The ground is 16 to 71 m above the nearest drainage line (median about 37 m). The nearest real wadi channel (1.4 km² catchment) passes about 115 m south-east of corner 3.</span></div></div>
+    <div class="flag"><span class="ic">!</span><div><b>Flattening it all would be a very big job.</b><span class="small" id="earthtxt"></span></div></div>
+  </div>
+  <p class="small muted">The survey lists the western neighbour as "plot 68 + wadi". At 30 m resolution the terrain model sees the ridge crest there, not a channel, so that wadi is either a small gully below 30 m scale or the valley at the foot of the ridge. Worth checking on the ground.</p>
+</section>
+
+<section id="climate">
+  <h2>Climate <span class="ar">المناخ</span></h2>
+  <p class="lede">NASA POWER daily weather for this grid cell (2001 to 2025) and ECMWF ERA5 reanalysis (1950 to 2025).</p>
+  <div class="grid g4" id="ctiles"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><div class="ctitle">Average month</div><div class="csub">Daily high and low, °C (NASA POWER 2001 to 2025)</div><div class="legend"><span><i style="background:var(--s2)"></i>Daily high</span><span><i style="background:var(--s1)"></i>Daily low</span></div><div class="chart" id="cTemp"></div></div>
+    <div class="card"><div class="ctitle">Rain vs what the air can evaporate</div><div class="csub">mm per month. Reference evapotranspiration (FAO-56) vs rain.</div><div class="legend"><span><i style="background:var(--s2)"></i>Evaporation demand (ET₀)</span><span><i style="background:var(--s1)"></i>Rain</span></div><div class="chart" id="cWater"></div></div>
+    <div class="card"><div class="ctitle">75 years of warming here</div><div class="csub">Annual mean temperature, °C (ERA5), with linear trend</div><div class="chart" id="cWarm"></div></div>
+    <div class="card"><div class="ctitle">Rain each year</div><div class="csub">Total mm (ERA5). Highlighted: the year of the wettest day on record, 29 April 2013.</div><div class="chart" id="cRain"></div></div>
+    <div class="card"><div class="ctitle">Very hot days</div><div class="csub">Days per year with a high of 45 °C or more (NASA POWER)</div><div class="chart" id="cHot"></div></div>
+    <div class="card"><div class="ctitle">Wettest days since 1950</div><div class="csub">ERA5 daily totals for this grid cell</div><table id="wetdays"></table></div>
+  </div>
+</section>
+
+<section id="sun">
+  <h2>Sun &amp; qibla <span class="ar">الشمس والقبلة</span></h2>
+  <p class="lede">Where the sun is over the plot at any moment, how long shadows get, and which way Makkah is.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="ctl"><label>Date <b id="dlab"></b></label><input type="range" id="doy" min="1" max="365"></div>
+      <div class="ctl"><label>Time (Riyadh) <b id="tlab"></b></label><input type="range" id="tod" min="300" max="1260" step="5"></div>
+      <div class="grid g2" style="gap:10px" id="suntiles"></div>
+      <div class="ctl" style="margin-top:12px"><label>Object height for the shadow <b id="hlab"></b></label><input type="range" id="objh" min="1" max="20" value="3"></div>
+      <p class="small muted" id="shadowtxt"></p>
+    </div>
+    <div class="card"><div class="ctitle">Sun path over the plot</div><div class="csub">Centre = straight overhead. Edge = horizon. Selected day in orange; solstices dashed.</div><div class="chart" id="sunpath"></div></div>
+  </div>
+</section>
+
+<section id="solar">
+  <h2>Solar power <span class="ar">الطاقة الشمسية</span></h2>
+  <p class="lede">A PVWatts-style model run on 5 years of NASA POWER hourly sunlight (2020 to 2024) at this exact point.</p>
+  <div class="grid g4" id="stiles"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><div class="ctitle">Energy per month</div><div class="csub">kWh per kW of panels</div><div class="legend"><span><i style="background:var(--s1)"></i>Single-axis tracker</span><span><i style="background:var(--s2)"></i>Fixed, 25° south</span><span><i style="background:var(--s3)"></i>Flat</span></div><div class="chart" id="pvMonth"></div></div>
+    <div class="card"><div class="ctitle">Best tilt for fixed panels</div><div class="csub">kWh per kW per year, facing south</div><div class="chart" id="pvTilt"></div></div>
+    <div class="card"><div class="ctitle">When the power comes</div><div class="csub">Average output of a tracker, kW per kW, by month and hour</div><div class="chart" id="pvHeat"></div></div>
+    <div class="card">
+      <div class="ctitle">Size a solar farm on this plot</div><div class="csub">Rough sizing. Real layouts on a 15° hillside need a designer.</div>
+      <div class="seg" id="pvType" style="margin:6px 0 12px"><button data-v="fix" class="on">Fixed tilt</button><button data-v="trk">Tracker</button></div>
+      <div class="ctl"><label>Share of the plot used <b id="pvAreaLab"></b></label><input type="range" id="pvArea" min="10" max="90" value="50"></div>
+      <div class="ctl"><label>Ground coverage (panel area ÷ land) <b id="pvGcrLab"></b></label><input type="range" id="pvGcr" min="20" max="60" value="40"></div>
+      <div class="kv" id="pvOut"></div>
+    </div>
+  </div>
+</section>
+
+<section id="sat">
+  <h2>Satellite record <span class="ar">السجل الفضائي</span></h2>
+  <p class="lede">The clearest Sentinel-2 pass of every month since September 2015, averaged over the plot polygon (130 scenes).</p>
+  <div class="grid g2">
+    <div class="card"><div class="ctitle">Greenness (NDVI)</div><div class="csub">0.1 or less = bare ground. Farms here reach 0.5 to 0.8.</div><div class="chart" id="sNdvi"></div></div>
+    <div class="card"><div class="ctitle">Light and shadow inside the plot</div><div class="csub">Spread of red reflectance across the plot's pixels</div><div class="chart" id="sSd"></div></div>
+    <div class="card"><div class="ctitle">Built-up land around the plot</div><div class="csub">% of land classed as built, within 6 km (Impact Observatory 10 m land cover)</div><div class="chart" id="sBuilt"></div></div>
+    <div class="card"><h3>What the record says</h3><div id="satText" class="small"></div></div>
+  </div>
+</section>
+
+<section id="options">
+  <h2>What it could be <span class="ar">ماذا يمكن أن تكون</span></h2>
+  <p class="lede">Not recommendations. These are the numbers each idea would have to live with on this specific ground.</p>
+  <div class="grid g3" id="opts"></div>
+</section>
+
+<section id="value">
+  <h2>Value range <span class="ar">نطاق القيمة</span></h2>
+  <p class="lede">Prices around Al-Ammariyah vary by a factor of four depending on plot size, frontage and whether services are in. Slide to see what each level means for 36,147 m². This is arithmetic, not a valuation or financial advice.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="ctl"><label>Price per m² <b id="pLab"></b></label><input type="range" id="price" min="200" max="1500" step="10" value="362"></div>
+      <div class="big" id="pTot"></div><div class="small muted" id="pNote"></div>
+      <div class="chart" id="pScale" style="margin-top:12px"></div>
+    </div>
+    <div class="card small">
+      <h3>Reference points (Nov 2026)</h3>
+      <div class="kv" id="pRefs"></div>
+      <p class="muted">Big plots, plots with no services and plots on steep ground usually trade below the area average per m². A 50 m street frontage usually pushes the other way. Only a licensed valuer (مقيّم معتمد) can price a specific plot.</p>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <h2>Method &amp; sources <span class="ar">المنهجية والمصادر</span></h2>
+  <div class="grid g2">
+    <div class="card small">
+      <h3>How each number was made</h3>
+      <ul>
+        <li><b>Geometry:</b> shoelace area and side lengths on the UTM 38N coordinates; geodesic area on WGS-84 with pyproj; UTM to lat/lon conversion compared with the sheet's own lat/lon.</li>
+        <li><b>Terrain:</b> Copernicus GLO-30 DEM; priority-flood depression filling, D8 flow directions and flow accumulation over a 20 × 22 km window; height above nearest drainage (HAND) with a 0.5 km² channel threshold; slopes from 30 m central differences on a 5 m bilinear resample.</li>
+        <li><b>Weather:</b> NASA POWER daily (2001 to 2025) and hourly (2020 to 2024); ERA5 via Open-Meteo (1950 to 2025). Reference ET from the FAO-56 Penman-Monteith equation using POWER Tmax, Tmin, dew point, wind at 2 m, solar radiation and surface pressure.</li>
+        <li><b>Solar:</b> NOAA sun position; isotropic sky; albedo 0.3; SAPM open-rack cell temperature; −0.37 %/°C; 14 % system losses (incl. soiling) and a 96 % inverter; tracker = horizontal north-south axis, ±60°, no backtracking. Results are on the conservative side of published Riyadh yields.</li>
+        <li><b>Satellite:</b> Sentinel-2 L2A band means over the polygon from the Planetary Computer statistics API, with the −1000 offset applied to scenes after 25 Jan 2022. Land cover: Impact Observatory annual v02.</li>
+        <li><b>Earthworks:</b> balanced cut and fill to one level over the whole plot from the resampled DEM. A 30 m model smooths ridges, so treat it as an order of magnitude.</li>
+      </ul>
+    </div>
+    <div class="card small">
+      <h3>Sources</h3>
+      <ul class="sources">
+        <li>Survey sheet: Saif Engineering Consultation, plan 623, plot 67 (owner and deed details left out of this public page)</li>
+        <li><a href="https://power.larc.nasa.gov/">NASA POWER</a> (Prediction Of Worldwide Energy Resources)</li>
+        <li><a href="https://open-meteo.com/en/docs/historical-weather-api">Open-Meteo historical API</a> (ECMWF ERA5)</li>
+        <li><a href="https://planetarycomputer.microsoft.com/">Microsoft Planetary Computer</a>: Copernicus DEM GLO-30, Sentinel-2 L2A, Landsat Collection 2 L2, IO land cover</li>
+        <li>Base imagery: Esri World Imagery. 3D terrain: AWS Terrain Tiles</li>
+        <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> via Overpass (checked 15 Nov 2026)</li>
+        <li><a href="https://www.fao.org/4/x0490e/x0490e00.htm">FAO-56</a> crop evapotranspiration guidelines</li>
+        <li>Prices: <a href="https://raghdan.sa/ar/market/%D8%A7%D9%84%D8%AF%D8%B1%D8%B9%D9%8A%D9%87/%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D8%B1%D9%8A%D8%A9/">Raghdan market data</a>, <a href="https://sa.aqar.fm/en/land-for-sale/ad-diriyah/7">Aqar listings</a>, <a href="https://www.bayut.sa/en/property/details-87867423.html">Bayut listings</a></li>
+      </ul>
+      <p class="muted">Code and data: <a href="https://github.com/mbassam2009/ard">github.com/mbassam2009/ard</a></p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>Ard (أرض) · built November 2026 · all computations reproducible from the repository. Not a survey, valuation or engineering study.</footer>
+
+<script src="data.js"></script>
+<script>
+const A=window.ARD;
+const $=s=>document.querySelector(s);
+const fmt=(v,d=0)=>{if(d<0){const k=10**(-d);return (Math.round(v/k)*k).toLocaleString('en-US',{maximumFractionDigits:0});}return Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const C={lat:24.701834,lon:46.379940};
+const POLY=A.geom.ll.map(p=>[p[1],p[0]]);
+
+/* ---------- theme ---------- */
+$('#theme').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';drawAll();};
+
+/* ---------- tiles ---------- */
+function tiles(el,arr){$(el).innerHTML=arr.map(t=>`<div class="card tile"><div class="k">${t.k}</div><div class="v">${t.v}${t.u?`<small>${t.u}</small>`:''}</div>${t.n?`<div class="n">${t.n}</div>`:''}</div>`).join('');}
+const S=A.summary, T=A.terrain.plot;
+tiles('#tiles',[
+ {k:'Area from the coordinates',v:fmt(A.geom.area_grid),u:'m²',n:`Sheet says ${fmt(A.geom.area_deed,1)} m²`},
+ {k:'Elevation inside the plot',v:`${Math.round(T.elev_min)}–${Math.round(T.elev_max)}`,u:'m',n:`${Math.round(T.elev_max-T.elev_min)} m of relief in 3.6 ha`},
+ {k:'Sunlight on the ground',v:fmt(S.ghi_mean),u:'kWh/m²/yr',n:'NASA POWER, 2015 to 2024'},
+ {k:'Warming since the 1950s–70s',v:'+'+(S.t_1996_2025-S.t_1950_79).toFixed(1),u:'°C',n:'1950–79 vs 1996–2025, ERA5'},
+]);
+
+/* ---------- generic SVG chart ---------- */
+function svgEl(tag,attrs,parent){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function niceTicks(lo,hi,n=5){const span=hi-lo||1;const step0=span/n;const mag=10**Math.floor(Math.log10(step0));const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=step0);const t=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)t.push(+v.toFixed(10));return t;}
+/* opts: {x:[labels], series:[{name,values,color,type:'line'|'bar',width,dash}], yMin,yMax,yFmt,xEvery,height,band:{lo,hi,color},shadeX:[i0,i1],highlight:i, tipFmt} */
+function chart(el,o){
+  const host=typeof el==='string'?$(el):el;host.innerHTML='';
+  const W=560,H=o.height||240,m={l:44,r:12,t:10,b:28};
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label||''},host);
+  const n=o.x.length;
+  const all=o.series.flatMap(s=>s.values).concat(o.band?[...o.band.lo,...o.band.hi]:[]).filter(v=>v!=null);
+  let lo=o.yMin!=null?o.yMin:Math.min(...all), hi=o.yMax!=null?o.yMax:Math.max(...all);
+  if(o.yMin==null){const p=(hi-lo)*0.08;lo-=p;}
+  if(o.yMax==null){hi+=(hi-lo)*0.06;}
+  const ticks=niceTicks(lo,hi,o.ticks||5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const bars=o.series.filter(s=>s.type==='bar');
+  const bw=(W-m.l-m.r)/n;
+  const X=i=>m.l+bw*(i+0.5), Y=v=>m.t+(H-m.t-m.b)*(1-(v-lo)/(hi-lo));
+  const g=svgEl('g',{class:'grid'},svg);ticks.forEach(t=>svgEl('line',{x1:m.l,x2:W-m.r,y1:Y(t),y2:Y(t)},g));
+  const ax=svgEl('g',{class:'ax'},svg);
+  ticks.forEach(t=>{const tx=svgEl('text',{x:m.l-6,y:Y(t)+4,'text-anchor':'end'},ax);tx.textContent=(o.yFmt||(v=>fmt(v)))(t);});
+  const every=o.xEvery||Math.ceil(n/12);
+  o.x.forEach((lab,i)=>{if(i%every)return;const tx=svgEl('text',{x:X(i),y:H-8,'text-anchor':'middle'},ax);tx.textContent=lab;});
+  svgEl('line',{x1:m.l,x2:W-m.r,y1:Y(Math.max(lo,Math.min(hi,o.base??lo))),y2:Y(Math.max(lo,Math.min(hi,o.base??lo)))},ax);
+  if(o.shadeX){svgEl('rect',{x:X(o.shadeX[0]),width:X(o.shadeX[1])-X(o.shadeX[0]),y:m.t,height:H-m.t-m.b,fill:css('--plot'),opacity:.16},svg);}
+  if(o.band){let d='';o.band.hi.forEach((v,i)=>d+=(i?'L':'M')+X(i)+','+Y(v));for(let i=n-1;i>=0;i--)d+='L'+X(i)+','+Y(o.band.lo[i]);svgEl('path',{d:d+'Z',fill:o.band.color,opacity:.14},svg);}
+  bars.forEach((s,k)=>{const gw=bw*0.72/bars.length;s.values.forEach((v,i)=>{if(v==null)return;const x=X(i)-bw*0.36+k*gw+1;const y0=Y(Math.max(lo,0)),y1=Y(v);const h=Math.max(Math.abs(y0-y1),v?1.5:0);const r=Math.min(4,gw/2-1,h);const top=Math.min(y0,y1);
+    const p=`M${x},${top+h} V${top+r} q0,${-r} ${r},${-r} H${x+gw-2-r} q${r},0 ${r},${r} V${top+h} Z`;svgEl('path',{d:p,fill:(o.highlight===i&&s.hi)?s.hi:s.color},svg);});});
+  o.series.filter(s=>s.type!=='bar').forEach(s=>{let d='';let pen=false;s.values.forEach((v,i)=>{if(v==null){pen=false;return;}d+=(pen?'L':'M')+X(i)+','+Y(v);pen=true;});svgEl('path',{d,fill:'none',stroke:s.color,'stroke-width':s.width||2,'stroke-dasharray':s.dash||'','stroke-linejoin':'round','stroke-linecap':'round'},svg);
+    if(s.dots)s.values.forEach((v,i)=>{if(v!=null)svgEl('circle',{cx:X(i),cy:Y(v),r:2.6,fill:s.color},svg);});});
+  if(o.annot)o.annot.forEach(a=>{const tx=svgEl('text',{x:X(a.i)+(a.dx||0),y:Y(a.v)+(a.dy||-8),'text-anchor':a.anchor||'middle',fill:css('--muted'),'font-size':11.5},svg);tx.textContent=a.t;});
+  // hover
+  const tip=document.createElement('div');tip.className='tip';host.appendChild(tip);
+  const cross=svgEl('line',{y1:m.t,y2:H-m.b,stroke:css('--faint'),'stroke-width':1,opacity:0},svg);
+  const ov=svgEl('rect',{x:m.l,y:0,width:W-m.l-m.r,height:H,fill:'transparent'},svg);
+  ov.addEventListener('pointermove',e=>{const r=svg.getBoundingClientRect();const sx=(e.clientX-r.left)*W/r.width;const i=Math.max(0,Math.min(n-1,Math.floor((sx-m.l)/bw)));
+    cross.setAttribute('x1',X(i));cross.setAttribute('x2',X(i));cross.setAttribute('opacity',.6);
+    const rows=o.series.filter(s=>!s.noTip).map(s=>`<div><span class="dot" style="background:${s.color}"></span>${s.name}: ${s.values[i]==null?'–':(s.fmt||o.tipFmt||(v=>fmt(v,1)))(s.values[i])}</div>`).join('');
+    tip.innerHTML=`<div style="opacity:.75">${o.tipX?o.tipX(i):o.x[i]}</div>${rows}`;
+    const vals=o.series.map(s=>s.values[i]).filter(v=>v!=null);const yy=vals.length?Y(Math.max(...vals)):m.t;
+    tip.style.left=(X(i)/W*r.width)+'px';tip.style.top=(yy/H*r.height)+'px';tip.style.opacity=1;});
+  ov.addEventListener('pointerleave',()=>{tip.style.opacity=0;cross.setAttribute('opacity',0);});
+  return svg;
+}
+
+/* ---------- survey ---------- */
+function drawShape(){
+  const host=$('#shape');host.innerHTML='';
+  const U=A.geom.utm;const xs=U.map(p=>p[0]),ys=U.map(p=>p[1]);
+  const minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
+  const W=520,H=430,pad=58;const s=Math.min((W-2*pad)/(maxx-minx),(H-2*pad)/(maxy-miny));
+  const P=([x,y])=>[pad+(x-minx)*s,H-pad-(y-miny)*s];
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Plot shape with side lengths'},host);
+  const pts=U.map(P);
+  svgEl('polygon',{points:pts.map(p=>p.join(',')).join(' '),fill:css('--plot'),'fill-opacity':.22,stroke:css('--accent'),'stroke-width':2},svg);
+  A.geom.sides.forEach((sd,i)=>{const a=pts[i],b=pts[(i+1)%5];const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;const cx=pts.reduce((s,p)=>s+p[0],0)/5,cy=pts.reduce((s,p)=>s+p[1],0)/5;const dx=mx-cx,dy=my-cy,L=Math.hypot(dx,dy);
+    const t=svgEl('text',{x:mx+dx/L*22,y:my+dy/L*22+4,'text-anchor':'middle','font-size':13,'font-family':css('--font-num'),fill:css('--ink')},svg);t.textContent=sd.len.toFixed(2)+' m';});
+  pts.forEach((p,i)=>{svgEl('circle',{cx:p[0],cy:p[1],r:11,fill:css('--ink')},svg);const t=svgEl('text',{x:p[0],y:p[1]+4,'text-anchor':'middle','font-size':12,fill:css('--bg'),'font-weight':600},svg);t.textContent=i+1;
+    const cx=pts.reduce((s,q)=>s+q[0],0)/5,cy=pts.reduce((s,q)=>s+q[1],0)/5;const dx=p[0]-cx,dy=p[1]-cy,L=Math.hypot(dx,dy);const at=svgEl('text',{x:p[0]-dx/L*34,y:p[1]-dy/L*34+4,'text-anchor':'middle','font-size':11,fill:css('--muted'),'font-family':css('--font-num')},svg);at.textContent=A.geom.angles[i].toFixed(1)+'°';});
+  // north arrow
+  const g=svgEl('g',{transform:`translate(${W-30},40)`},svg);svgEl('path',{d:'M0,-22 L7,6 L0,1 L-7,6 Z',fill:css('--ink')},g);const nt=svgEl('text',{x:0,y:22,'text-anchor':'middle','font-size':12,fill:css('--ink'),'font-weight':600},g);nt.textContent='N';
+  const cap=document.createElement('div');cap.className='small muted';cap.style.marginTop='6px';cap.textContent='Drawn to scale from the UTM coordinates. Interior angles in grey; they add up to 540°.';host.appendChild(cap);
+}
+function surveyTable(){
+  const sd=A.geom.sides;const L=k=>sd.find(s=>s.a===k).len;
+  const rows=[
+    ['North','street, 50 m wide','1 → 2',A.geom.deed_sides.N,L(1)],
+    ['East','street, 20 m wide','2 → 3',A.geom.deed_sides.E,L(2)],
+    ['South','plot 66','3 → 4',A.geom.deed_sides.S,L(3)],
+    ['West','plot 68 + wadi','4 → 5 → 1',A.geom.deed_sides.W,L(4)+L(5)],
+  ];
+  $('#sides').innerHTML='<tr><th>Side</th><th>Neighbour</th><th>Corners</th><th class="num">Sheet (m)</th><th class="num">From coords (m)</th><th class="num">Diff</th></tr>'+rows.map(r=>{const d=r[4]-r[3];return `<tr class="${Math.abs(d)>0.05?'bad':''}"><td>${r[0]}</td><td>${r[1]}</td><td class="num">${r[2]}</td><td class="num">${r[3].toFixed(2)}</td><td class="num">${r[4].toFixed(2)}</td><td class="num">${(d>=0?'+':'')+d.toFixed(2)}</td></tr>`;}).join('')
+  +`<tr><td>Area</td><td></td><td></td><td class="num">${fmt(A.geom.area_deed,1)}</td><td class="num">${fmt(A.geom.area_grid,1)}</td><td class="num">+${fmt(A.geom.area_grid-A.geom.area_deed,1)}</td></tr>`;
+  $('#flags').innerHTML=`
+  <div class="flag ok"><span class="ic">✓</span><div><b>The two coordinate lists agree to about 1 cm.</b><span class="small">Converting the UTM corners to latitude/longitude reproduces the sheet's lat/lon at every corner. The corners themselves are consistent.</span></div></div>
+  <div class="flag"><span class="ic">!</span><div><b>East side: 190.03 m, not 190.3 m.</b><span class="small">Both length tables on the sheet print 190.3, but the coordinates (and the drawing on the same sheet) give 190.03 m. A dropped zero, 27 cm on paper.</span></div></div>
+  <div class="flag"><span class="ic">!</span><div><b>The coordinates enclose ${fmt(A.geom.area_grid)} m², ${fmt(A.geom.area_grid-A.geom.area_deed)} m² more than the sheet's 36,049.9 m².</b><span class="small">That is 0.27 %. On the ellipsoid it is ${fmt(A.geom.area_ellipsoid)} m². The side lengths match the coordinates, so the area figure is the odd one out: it may come from an older measurement or a different calculation. Worth asking the surveyor which figure the deed should carry.</span></div></div>
+  <div class="flag ok"><span class="ic">✓</span><div><b>West side is two segments.</b><span class="small">The sheet's 167.92 m is corner 4 → 5 (${L(4).toFixed(2)} m) plus 5 → 1 (${L(5).toFixed(2)} m). The sum matches exactly.</span></div></div>`;
+}
+
+/* ---------- terrain ---------- */
+function drawTerrain(){
+  const t=A.terrain;
+  tiles('#ttiles',[
+    {k:'Average slope',v:t.plot.slope_mean_deg.toFixed(1),u:'°',n:`Steepest 10 % above ${t.plot.slope_p90_deg.toFixed(0)}°`},
+    {k:'Flat enough to build easily (<5°)',v:'≈'+fmt(A.geom.area_grid*t.slopeClassesPct['<5']/100,-2),u:'m²',n:`${t.slopeClassesPct['<5']} % of the plot; under 10°: ${(t.slopeClassesPct['<5']+t.slopeClassesPct['5-10']).toFixed(0)} %`},
+    {k:'Height above nearest drainage',v:`${Math.round(t.plot.hand_min_m)}–${Math.round(t.plot.hand_max_m)}`,u:'m',n:'Low flood exposure'},
+    {k:'Mostly faces',v:'E & SE',n:'67 % of the slopes; morning sun first'},
+  ]);
+  const pw=t.profWE.z, pn=t.profNS.z;
+  const kmW=(46.3830-46.3770)*111320*Math.cos(24.7018*Math.PI/180)/40, kmN=(24.7045-24.6992)*110780/40;
+  // plot extent along WE line at lat 24.70183: x from ~46.37870 to 46.38110 ; NS at lon 46.37994: lat 24.70253 to 24.70100
+  const iW=lo=>Math.round((lo-46.3770)/(0.006/40)), iN=la=>Math.round((24.7045-la)/(0.0053/40));
+  chart('#profWE',{x:pw.map((_,i)=>Math.round(i*kmW)+' m'),xEvery:8,series:[{name:'Elevation',values:pw,color:css('--accent'),fmt:v=>fmt(v,0)+' m'}],shadeX:[iW(46.37870),iW(46.38110)],tipX:i=>Math.round(i*kmW)+' m from west end',yFmt:v=>fmt(v)});
+  chart('#profNS',{x:pn.map((_,i)=>Math.round(i*kmN)+' m'),xEvery:8,series:[{name:'Elevation',values:pn,color:css('--accent'),fmt:v=>fmt(v,0)+' m'}],shadeX:[iN(24.70253),iN(24.70100)],tipX:i=>Math.round(i*kmN)+' m from north end',yFmt:v=>fmt(v)});
+  const sc=t.slopeClassesPct;const ks=Object.keys(sc);
+  chart('#slopes',{x:ks.map(k=>k+'°'),xEvery:1,yMin:0,series:[{name:'Share of plot',values:ks.map(k=>sc[k]),color:css('--accent'),type:'bar',fmt:v=>v.toFixed(1)+' %'}],yFmt:v=>v+'%',height:200});
+  // aspect rose
+  const host=$('#rose');host.innerHTML='';const W=300,H=240,cx=150,cy=118,R=95;const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Aspect rose'},host);
+  [25,50].forEach(p=>svgEl('circle',{cx,cy,r:R*p/50,fill:'none',stroke:css('--line')},svg));
+  const dirs=['N','NE','E','SE','S','SW','W','NW'];const vals=dirs.map(d=>t.aspectPct[d]);
+  const tip=document.createElement('div');tip.className='tip';host.appendChild(tip);
+  dirs.forEach((d,i)=>{const a0=(i*45-20)*Math.PI/180,a1=(i*45+20)*Math.PI/180;const r=R*Math.min(vals[i],50)/50;
+    const p=`M${cx},${cy} L${cx+r*Math.sin(a0)},${cy-r*Math.cos(a0)} A${r},${r} 0 0 1 ${cx+r*Math.sin(a1)},${cy-r*Math.cos(a1)} Z`;
+    const pa=svgEl('path',{d:p,fill:css('--accent'),'fill-opacity':.85,stroke:css('--surface'),'stroke-width':2},svg);
+    pa.addEventListener('pointerenter',()=>{const b=svg.getBoundingClientRect();tip.innerHTML=`${d}: ${vals[i]} %`;tip.style.left=((cx+R*0.6*Math.sin(i*45*Math.PI/180))/W*b.width)+'px';tip.style.top=((cy-R*0.6*Math.cos(i*45*Math.PI/180))/H*b.height)+'px';tip.style.opacity=1;});
+    pa.addEventListener('pointerleave',()=>tip.style.opacity=0);
+    const lt=svgEl('text',{x:cx+(R+14)*Math.sin(i*45*Math.PI/180),y:cy-(R+14)*Math.cos(i*45*Math.PI/180)+4,'text-anchor':'middle','font-size':12,fill:css('--muted')},svg);lt.textContent=d;});
+  const e=A.earth;
+  $('#earthtxt').textContent=`To level the whole plot to one height (about ${Math.round(e.level)} m) you would cut roughly ${fmt(e.cut_m3,-3)} m³ of rock and soil and fill the same amount elsewhere: on average about ${Math.round((e.cut_m3+e.fill_m3)/A.geom.area_grid)} m of cut or fill at every point, or some 20,000 truckloads. Building on the flatter south-east part, or in terraces, avoids most of that.`;
+}
+
+/* ---------- climate ---------- */
+function drawClimate(){
+  const cl=A.clim, an=A.annual, er=A.era.years;
+  const et=S.et0_mean, rp=S.rain_mean_power, re=S.rain_mean_era_1996;
+  tiles('#ctiles',[
+    {k:'Hottest month (Jul) average high',v:cl[6].tmax.toFixed(1),u:'°C',n:`Record here: ${Math.max(...an.map(a=>a.tmax)).toFixed(1)} °C (POWER)`},
+    {k:'Coldest month (Jan) average low',v:cl[0].tmin.toFixed(1),u:'°C',n:`Frost: ${A.annual.reduce((s,a)=>s+a.frost,0)} nights in 25 years`},
+    {k:'Rain per year',v:Math.round(rp)+'–'+Math.round(re),u:'mm',n:'POWER 2001–25 vs ERA5 1996–2025'},
+    {k:'Evaporation demand per year',v:fmt(et),u:'mm',n:`≈ ${Math.round(et/((rp+re)/2))}× the rain (FAO-56 ET₀)`},
+  ]);
+  chart('#cTemp',{x:MON,xEvery:1,series:[{name:'High',values:cl.map(c=>c.tmax),color:css('--s2'),dots:true,fmt:v=>v.toFixed(1)+' °C'},{name:'Low',values:cl.map(c=>c.tmin),color:css('--s1'),dots:true,fmt:v=>v.toFixed(1)+' °C'}],band:{lo:cl.map(c=>c.tmin),hi:cl.map(c=>c.tmax),color:css('--s2')},yFmt:v=>v+'°'});
+  chart('#cWater',{x:MON,xEvery:1,yMin:0,series:[{name:'ET₀',values:cl.map(c=>c.et0),color:css('--s2'),type:'bar',fmt:v=>fmt(v)+' mm'},{name:'Rain',values:cl.map(c=>c.rain),color:css('--s1'),type:'bar',fmt:v=>v.toFixed(1)+' mm'}],yFmt:v=>fmt(v)});
+  const yrs=er.map(r=>r[0]), tm=er.map(r=>r[1]);const n=yrs.length,mx=yrs.reduce((a,b)=>a+b)/n,my=tm.reduce((a,b)=>a+b)/n;let sxy=0,sxx=0;yrs.forEach((x,i)=>{sxy+=(x-mx)*(tm[i]-my);sxx+=(x-mx)**2;});const b=sxy/sxx;
+  chart('#cWarm',{x:yrs.map(String),xEvery:10,series:[{name:'Mean',values:tm,color:css('--s2'),fmt:v=>v.toFixed(2)+' °C'},{name:'Trend',values:yrs.map(x=>my+b*(x-mx)),color:css('--faint'),dash:'5 4',width:1.5,noTip:true}],yFmt:v=>v.toFixed(0)+'°',annot:[{i:n-1,v:my+b*(yrs[n-1]-mx),t:`+${(b*10).toFixed(2)} °C per decade`,anchor:'end',dy:18}]});
+  chart('#cRain',{x:yrs.map(String),xEvery:10,yMin:0,highlight:yrs.indexOf(2013),series:[{name:'Rain',values:er.map(r=>r[4]),color:css('--s1'),hi:css('--s2'),type:'bar',fmt:v=>v.toFixed(0)+' mm'}],tipFmt:v=>fmt(v),yFmt:v=>fmt(v)});
+  chart('#cHot',{x:an.map(a=>String(a.y)),xEvery:4,yMin:0,series:[{name:'Days ≥ 45 °C',values:an.map(a=>a.d45),color:css('--s2'),type:'bar',fmt:v=>v+' days'}],yFmt:v=>v,height:200});
+  $('#wetdays').innerHTML='<tr><th>Date</th><th class="num">mm in one day</th></tr>'+A.era.top.slice(0,7).map(r=>`<tr><td class="num">${r[0]}</td><td class="num">${r[1].toFixed(1)}</td></tr>`).join('');
+}
+
+/* ---------- sun ---------- */
+const D2R=Math.PI/180,R2D=180/Math.PI;
+function sunpos(ms,lat,lon){const jd=ms/864e5+2440587.5,T=(jd-2451545)/36525;
+ const L0=(280.46646+T*(36000.76983+T*0.0003032))%360,M=357.52911+T*(35999.05029-0.0001537*T),e=0.016708634-T*(0.000042037+0.0000001267*T);
+ const Cc=Math.sin(M*D2R)*(1.914602-T*(0.004817+0.000014*T))+Math.sin(2*M*D2R)*(0.019993-0.000101*T)+Math.sin(3*M*D2R)*0.000289;
+ const om=125.04-1934.136*T,lam=L0+Cc-0.00569-0.00478*Math.sin(om*D2R);
+ const eps=23+(26+(21.448-T*(46.815+T*(0.00059-T*0.001813)))/60)/60+0.00256*Math.cos(om*D2R);
+ const dec=Math.asin(Math.sin(eps*D2R)*Math.sin(lam*D2R));const y=Math.tan(eps*D2R/2)**2;
+ const Et=4*R2D*(y*Math.sin(2*L0*D2R)-2*e*Math.sin(M*D2R)+4*e*y*Math.sin(M*D2R)*Math.cos(2*L0*D2R)-0.5*y*y*Math.sin(4*L0*D2R)-1.25*e*e*Math.sin(2*M*D2R));
+ const d=new Date(ms);const mins=d.getUTCHours()*60+d.getUTCMinutes();const tst=((mins+Et+4*lon)%1440+1440)%1440;const ha=tst/4<0?tst/4+180:tst/4-180;
+ const cz=Math.sin(lat*D2R)*Math.sin(dec)+Math.cos(lat*D2R)*Math.cos(dec)*Math.cos(ha*D2R);const z=Math.acos(Math.max(-1,Math.min(1,cz)));
+ let az=Math.acos(Math.max(-1,Math.min(1,(Math.sin(lat*D2R)*Math.cos(z)-Math.sin(dec))/(Math.cos(lat*D2R)*Math.sin(z)))))*R2D;az=ha>0?(az+180)%360:(540-az)%360;
+ return {alt:90-z*R2D,az,dec:dec*R2D,eqt:Et};}
+const KAABA=[21.422487,39.826206];
+function bearing(a,b){const f1=a[0]*D2R,f2=b[0]*D2R,dl=(b[1]-a[1])*D2R;return (Math.atan2(Math.sin(dl)*Math.cos(f2),Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl))*R2D+360)%360;}
+function gc(a,b){const f1=a[0]*D2R,f2=b[0]*D2R,dl=(b[1]-a[1])*D2R,df=f2-f1;const h=Math.sin(df/2)**2+Math.cos(f1)*Math.cos(f2)*Math.sin(dl/2)**2;return 2*6371*Math.asin(Math.sqrt(h));}
+const QIBLA=bearing([C.lat,C.lon],KAABA), QDIST=gc([C.lat,C.lon],KAABA);
+const YEAR=2026;
+const msOf=(doy,minLocal)=>Date.UTC(YEAR,0,doy,0,0)+ (minLocal-180)*60000;
+function riseSet(doy){let rise=null,set=null,noon=null,maxAlt=-99;for(let m=240;m<=1260;m+=1){const p=sunpos(msOf(doy,m),C.lat,C.lon);if(p.alt>maxAlt){maxAlt=p.alt;noon=m;}if(rise==null&&p.alt>-0.833)rise=m;if(rise!=null&&set==null&&m>noon&&p.alt<-0.833)set=m;}return {rise,set,noon,maxAlt};}
+const hm=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(Math.round(m%60)).padStart(2,'0')}`;
+const compass=a=>['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(a/22.5)%16];
+function drawSun(){
+  const doy=+$('#doy').value, tod=+$('#tod').value, h=+$('#objh').value;
+  const d=new Date(Date.UTC(YEAR,0,doy));$('#dlab').textContent=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',timeZone:'UTC'});
+  $('#tlab').textContent=hm(tod);$('#hlab').textContent=h+' m';
+  const p=sunpos(msOf(doy,tod),C.lat,C.lon), rs=riseSet(doy);
+  const ttl=[{k:'Sun height',v:p.alt>0?p.alt.toFixed(1):'below',u:p.alt>0?'°':''},{k:'Sun direction',v:p.az.toFixed(0),u:'° '+compass(p.az)},{k:'Sunrise / sunset',v:`${hm(rs.rise)}–${hm(rs.set)}`},{k:'Daylight',v:hm(rs.set-rs.rise).replace(':','h ')+'m'}];
+  $('#suntiles').innerHTML=ttl.map(t=>`<div class="card tile" style="padding:12px"><div class="k">${t.k}</div><div class="v" style="font-size:21px">${t.v}${t.u?`<small>${t.u}</small>`:''}</div></div>`).join('');
+  $('#shadowtxt').innerHTML=p.alt>0?`A ${h} m tall wall or tree casts a shadow <b>${fmt(h/Math.tan(p.alt*D2R),1)} m</b> long, pointing ${compass((p.az+180)%360)}. At noon on this day the sun reaches ${rs.maxAlt.toFixed(1)}°${rs.maxAlt>89?' (almost straight overhead)':''}.<br>Qibla from the plot: <b>${QIBLA.toFixed(1)}°</b> (${compass(QIBLA)}), ${fmt(QDIST)} km to the Kaaba. The plot's north boundary runs west at ${(A.geom.sides[0].brg+180).toFixed(1)}°, so a building lined up with that street would need its prayer direction turned ${Math.abs(A.geom.sides[0].brg+180-QIBLA).toFixed(0)}° to the left of the street line.`:'The sun is below the horizon.';
+  // sun path diagram
+  const host=$('#sunpath');host.innerHTML='';const W=360,H=360,cx=180,cy=180,R=150;const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Sun path diagram'},host);
+  [0,30,60].forEach(a=>{svgEl('circle',{cx,cy,r:R*(90-a)/90,fill:'none',stroke:css('--line')},svg);if(a){const t=svgEl('text',{x:cx+3,y:cy-R*(90-a)/90-3,'font-size':10,fill:css('--faint')},svg);t.textContent=a+'°';}});
+  ['N','E','S','W'].forEach((l,i)=>{const t=svgEl('text',{x:cx+(R+13)*Math.sin(i*90*D2R),y:cy-(R+13)*Math.cos(i*90*D2R)+4,'text-anchor':'middle','font-size':12,fill:css('--muted'),'font-weight':600},svg);t.textContent=l;});
+  const pt=(alt,az)=>[cx+R*(90-alt)/90*Math.sin(az*D2R),cy-R*(90-alt)/90*Math.cos(az*D2R)];
+  const path=(dy,style)=>{let d='';let pen=false;for(let m=240;m<=1260;m+=5){const q=sunpos(msOf(dy,m),C.lat,C.lon);if(q.alt<0){pen=false;continue;}const [x,y]=pt(q.alt,q.az);d+=(pen?'L':'M')+x+','+y;pen=true;}svgEl('path',Object.assign({d,fill:'none'},style),svg);};
+  path(172,{stroke:css('--faint'),'stroke-dasharray':'4 4'});path(355,{stroke:css('--faint'),'stroke-dasharray':'4 4'});
+  path(doy,{stroke:css('--s2'),'stroke-width':2.5});
+  // qibla
+  const [qx,qy]=pt(0,QIBLA);svgEl('line',{x1:cx,y1:cy,x2:qx,y2:qy,stroke:css('--s3'),'stroke-width':2},svg);const qt=svgEl('text',{x:qx-6,y:qy+16,'font-size':11,fill:css('--s3'),'text-anchor':'middle'},svg);qt.textContent='Qibla '+QIBLA.toFixed(0)+'°';
+  if(p.alt>0){const [x,y]=pt(p.alt,p.az);svgEl('circle',{cx:x,cy:y,r:9,fill:'#ffcf3d',stroke:css('--surface'),'stroke-width':2},svg);}
+  [['Jun 21',172],['Dec 21',355]].forEach(([l,dd])=>{const q=riseSet(dd);const pp=sunpos(msOf(dd,q.noon),C.lat,C.lon);const [x,y]=pt(pp.alt,pp.az);const t=svgEl('text',{x:x+8,y:y+(dd===172?-6:14),'font-size':10.5,fill:css('--faint')},svg);t.textContent=l;});
+}
+
+/* ---------- solar ---------- */
+let pvType='fix';
+function drawSolar(){
+  const pv=A.pv;const tot=a=>a.reduce((s,x)=>s+x,0);
+  tiles('#stiles',[
+    {k:'Tracker, per kW of panels',v:fmt(tot(pv.trk)),u:'kWh/yr',n:'Single-axis, north-south'},
+    {k:'Fixed tilt, per kW',v:fmt(tot(pv.fix25)),u:'kWh/yr',n:'Best tilt 20–25° south'},
+    {k:'Best month vs worst',v:(Math.max(...pv.trk)/Math.min(...pv.trk)).toFixed(1)+'×',n:'Jun vs Dec, tracker'},
+    {k:'Year-to-year range',v:`${fmt(Math.min(...pv.trkYears))}–${fmt(Math.max(...pv.trkYears))}`,u:'kWh/kW',n:'Spread across 2020 to 2024'},
+  ]);
+  chart('#pvMonth',{x:MON,xEvery:1,yMin:0,series:[{name:'Tracker',values:pv.trk,color:css('--s1'),dots:true},{name:'Fixed 25°',values:pv.fix25,color:css('--s2'),dots:true},{name:'Flat',values:pv.fix0,color:css('--s3'),dots:true}],tipFmt:v=>fmt(v)+' kWh',yFmt:v=>fmt(v)});
+  chart('#pvTilt',{x:pv.tiltSweep.map(t=>t[0]+'°'),xEvery:1,yMin:1400,series:[{name:'Yearly yield',values:pv.tiltSweep.map(t=>t[1]),color:css('--s2'),type:'bar',fmt:v=>fmt(v)+' kWh/kW'}],yFmt:v=>fmt(v),base:1400,height:210});
+  // heatmap
+  const host=$('#pvHeat');host.innerHTML='';const hrs=pv.trkProfileHours;const W=560,H=300,m={l:36,t:6,r:8,b:26};const cw=(W-m.l-m.r)/hrs.length,ch=(H-m.t-m.b)/12;
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Tracker output by month and hour'},host);const tip=document.createElement('div');tip.className='tip';host.appendChild(tip);
+  const ramp=['#cde2fb','#9ec5f4','#6da7ec','#3987e5','#256abf','#184f95','#0d366b'];const col=v=>v<=0.005?css('--surface-2'):ramp[Math.min(6,Math.floor(v/0.7*7))];
+  pv.trkProfile.forEach((row,mo)=>row.forEach((v,hi)=>{const r=svgEl('rect',{x:m.l+hi*cw+1,y:m.t+mo*ch+1,width:cw-2,height:ch-2,rx:3,fill:col(v)},svg);
+    r.addEventListener('pointerenter',()=>{const b=svg.getBoundingClientRect();tip.innerHTML=`${MON[mo]}, ${hrs[hi]}:00–${hrs[hi]+1}:00<br>${v.toFixed(2)} kW per kW`;tip.style.left=((m.l+(hi+.5)*cw)/W*b.width)+'px';tip.style.top=((m.t+mo*ch)/H*b.height)+'px';tip.style.opacity=1;});
+    r.addEventListener('pointerleave',()=>tip.style.opacity=0);}));
+  MON.forEach((mn,i)=>{const t=svgEl('text',{x:m.l-6,y:m.t+i*ch+ch/2+4,'text-anchor':'end','font-size':11,fill:css('--faint'),'font-family':css('--font-num')},svg);t.textContent=mn;});
+  hrs.forEach((h,i)=>{if(i%2)return;const t=svgEl('text',{x:m.l+i*cw+cw/2,y:H-8,'text-anchor':'middle','font-size':11,fill:css('--faint'),'font-family':css('--font-num')},svg);t.textContent=h+':00';});
+  pvCalc();
+}
+function pvCalc(){
+  const share=+$('#pvArea').value/100,gcr=+$('#pvGcr').value/100;$('#pvAreaLab').textContent=Math.round(share*100)+' %';$('#pvGcrLab').textContent=Math.round(gcr*100)+' %';
+  const land=A.geom.area_grid*share, kwp=land*gcr*0.215; // 21.5 % efficient modules => 0.215 kW/m2 of module
+  const y=(pvType==='trk'?A.pv.trk:A.pv.fix25).reduce((s,x)=>s+x,0);const mwh=kwp*y/1000;
+  $('#pvOut').innerHTML=`<span>Land used</span><span>${fmt(land,-2)} m²</span><span>Panel capacity</span><span>${fmt(kwp/1000,2)} MWp</span><span>Energy per year</span><span>${fmt(mwh/1000,2)} GWh</span><span>Per m² of land</span><span>${fmt(mwh*1000/land)} kWh</span>`;
+}
+document.querySelectorAll('#pvType button').forEach(b=>b.onclick=()=>{pvType=b.dataset.v;document.querySelectorAll('#pvType button').forEach(x=>x.classList.toggle('on',x===b));pvCalc();});
+['#pvArea','#pvGcr'].forEach(s=>$(s).addEventListener('input',pvCalc));
+
+/* ---------- satellite ---------- */
+function drawSat(){
+  const s=A.s2;
+  chart('#sNdvi',{x:s.map(r=>r.d.slice(0,7)),xEvery:24,yMin:0,yMax:0.5,series:[{name:'NDVI',values:s.map(r=>r.ndvi),color:css('--s3'),dots:true,fmt:v=>v.toFixed(3)}],tipX:i=>s[i].d,yFmt:v=>v.toFixed(1),annot:[{i:Math.floor(s.length/2),v:0.1,t:'never above 0.11: bare rock and gravel throughout',dy:-14}]});
+  chart('#sSd',{x:s.map(r=>r.d.slice(0,7)),xEvery:24,yMin:0,series:[{name:'Spread',values:s.map(r=>r.sd),color:css('--s1'),dots:true,fmt:v=>v.toFixed(3)}],tipX:i=>s[i].d,yFmt:v=>v.toFixed(2)});
+  const L=A.ctx.lulc;const ys=Object.keys(L);
+  chart('#sBuilt',{x:ys,xEvery:1,yMin:0,series:[{name:'Built within 6 km',values:ys.map(y=>L[y]['6000'].built||0),color:css('--s2'),type:'bar',fmt:v=>v.toFixed(2)+' %'}],yFmt:v=>v+'%',height:200});
+  const winter=s.filter(r=>[11,12,1].includes(+r.d.slice(5,7))).map(r=>r.sd),summer=s.filter(r=>[5,6,7].includes(+r.d.slice(5,7))).map(r=>r.sd);const av=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  $('#satText').innerHTML=`<p><b>Nothing has been built, farmed or graded on the plot since at least 2015.</b> Greenness averages ${S.ndvi_mean} and never passes ${S.ndvi_max}; there is no jump in brightness that would mark earthworks or a new road. The Landsat time machine on the map shows the same ridge back to 1987.</p>
+  <p><b>The ground's texture shows up in winter.</b> The spread of brightness across the plot is ${(av(winter)/av(summer)).toFixed(1)}× larger in Nov to Jan than in May to Jul. Low winter sun throws the ridge's north-west faces into shadow; in summer the sun is almost overhead and the shadows vanish. That is the terrain model's 64 m of relief, seen from space.</p>
+  <p><b>The neighbourhood is starting to fill in.</b> Within 1 km the land is still ${L['2023']['1000'].rangeland.toFixed(0)} % open rangeland, and OpenStreetMap shows no buildings or roads within about 2.3 km. But built-up land within 6 km grew from ${L['2017']['6000'].built} % to ${L['2023']['6000'].built} % between 2017 and 2023, about ${(L['2023']['6000'].built/L['2017']['6000'].built).toFixed(1)}×.</p>`;
+}
+
+/* ---------- options ---------- */
+function drawOptions(){
+  const area=A.geom.area_grid,sc=A.terrain.slopeClassesPct;const flat5=area*sc['<5']/100,flat10=area*(sc['<5']+sc['5-10'])/100;
+  const et0=S.et0_mean;const palmMM=0.95*et0;const palms=Math.floor(flat10/100);const palmM3=palms*palmMM/1000*100/0.9;
+  const rain=(S.rain_mean_power+S.rain_mean_era_1996)/2;const harvest=area*rain/1000*0.5;
+  const kwp=area*0.5*0.4*0.215, gwh=kwp*A.pv.fix25.reduce((a,b)=>a+b,0)/1e6;
+  const o=[
+   {t:'Rest house / istiraha',tag:'flat part',kv:[['Flat ground under 5°',fmt(flat5,-2)+' m²'],['Under 10° (light grading)',fmt(flat10,-2)+' m²'],['Flattest ground','east and south-east half'],['Hottest months','Jun–Aug, highs ≈ '+A.clim[6].tmax.toFixed(0)+' °C']],p:'Fits on the gentler south-east half next to the 20 m street, leaving the ridge behind it. A typical 3,000 m² istiraha plot would use a small share of the land.'},
+   {t:'Solar farm',tag:'≈ '+fmt(gwh,1)+' GWh/yr',kv:[['Half the plot, fixed tilt',fmt(kwp/1000,1)+' MWp'],['Energy',fmt(gwh,2)+' GWh/yr'],['Slopes face','E and SE (ok for fixed tilt)'],['Dust','cleaning schedule matters']],p:'Strong sun but steep, broken ground: fixed racks that follow the contours suit it better than long tracker rows. Use the calculator in the Solar section to try other sizes.'},
+   {t:'Date palms',tag:'water is the limit',kv:[['Palms at 10 × 10 m on slopes <10°','≈ '+fmt(palms)],['Water need (FAO-56, Kc 0.95, drip)','≈ '+fmt(palmM3,-3)+' m³/yr'],['Per palm','≈ '+fmt(palmMM/10/0.9)+' m³/yr'],['Rain that falls on the whole plot','≈ '+fmt(area*rain/1000,-2)+' m³/yr']],p:`A palm grove would need about ${Math.round(palmM3/(area*rain/1000))}× all the rain that lands on the plot, so it depends entirely on a well or trucked water. The ridge soil is thin, so planting pits would need imported soil.`},
+   {t:'Rain harvesting + native trees',tag:'low cost',kv:[['Runoff in an average year (50 %)','≈ '+fmt(harvest,-2)+' m³'],['From a 54 mm day like Apr 2013','≈ '+fmt(area*0.054*0.5,-2)+' m³'],['Water flows toward','the E and SE corners']],p:'Small stone check-dams and swales on the slope could hold runoff for drought-hardy native trees (sidr, talh, ghaf), which survive on far less water than palms. Cheap, reversible, and it greens the view.'},
+   {t:'Hold the land',tag:'no works',kv:[['Built-up within 6 km, 2017','0.41 %'],['Built-up within 6 km, 2023','1.83 %'],['Streets on the plan','50 m (N), 20 m (E)'],['Streets built yet','not in current imagery']],p:'The plan gives the plot a 50 m street frontage, which is rare. The streets are not built yet; when they are, access and value change most.'},
+   {t:'Before any of these',tag:'checks',kv:[['Ask the surveyor','area 36,049.9 vs 36,147 m²'],['Fix the typo','east side 190.03 m'],['Check zoning','with Diriyah municipality / Balady'],['Ground visit','the "wadi" on the west side']],p:'These are cheap to clear up now and expensive later, especially the area figure if the land is ever sold or subdivided.'},
+  ];
+  $('#opts').innerHTML=o.map(x=>`<div class="card opt"><h3>${x.t}<span class="tag">${x.tag}</span></h3><div class="kv">${x.kv.map(k=>`<span>${k[0]}</span><span>${k[1]}</span>`).join('')}</div><p class="small muted" style="margin:6px 0 0">${x.p}</p></div>`).join('');
+}
+
+/* ---------- value ---------- */
+function drawValue(){
+  const p=+$('#price').value,area=A.geom.area_grid;$('#pLab').textContent=fmt(p)+' SAR/m²';
+  $('#pTot').textContent=fmt(p*area/1e6,1)+' million SAR';
+  $('#pNote').textContent=`${fmt(area)} m² × ${fmt(p)} SAR. On the sheet's 36,049.9 m² it would be ${fmt(p*A.geom.area_deed/1e6,2)} M; the ${fmt(area-A.geom.area_deed)} m² difference is worth ${fmt(p*(area-A.geom.area_deed))} SAR at this price.`;
+  const refs=[['Average registered deal, Al-Ammariyah (174 deals)',362],['Asking, 11,756 m² plot on a 50 m street',700],['Selling target, same plot',800],['Asking, small farm / rest-house plots','600–1,400'],['Asking, 20,080 m² school-zoned plot',2000]];
+  $('#pRefs').innerHTML=refs.map(r=>`<span>${r[0]}</span><span>${typeof r[1]==='number'?fmt(r[1]):r[1]}</span>`).join('')+'<span class="muted">Raghdan reports the area average down 39.5 % on the year.</span><span></span>';
+  // scale
+  const host=$('#pScale');host.innerHTML='';const W=520,H=70;const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Price scale'},host);const X=v=>20+(v-200)/1300*(W-40);
+  svgEl('line',{x1:X(200),x2:X(1500),y1:36,y2:36,stroke:css('--line'),'stroke-width':6,'stroke-linecap':'round'},svg);
+  svgEl('rect',{x:X(600),width:X(1400)-X(600),y:33,height:6,rx:3,fill:css('--sand'),opacity:.6},svg);
+  [[362,'avg deal'],[750,'50 m street plot']].forEach(([v,l])=>{svgEl('line',{x1:X(v),x2:X(v),y1:24,y2:48,stroke:css('--muted')},svg);const t=svgEl('text',{x:X(v),y:62,'text-anchor':'middle','font-size':11,fill:css('--muted')},svg);t.textContent=l;});
+  svgEl('circle',{cx:X(p),cy:36,r:8,fill:css('--accent'),stroke:css('--surface'),'stroke-width':2},svg);
+  [200,500,1000,1500].forEach(v=>{const t=svgEl('text',{x:X(v),y:16,'text-anchor':'middle','font-size':10.5,fill:css('--faint'),'font-family':css('--font-num')},svg);t.textContent=fmt(v);});
+}
+$('#price').addEventListener('input',drawValue);
+
+/* ---------- map ---------- */
+const SCENES=[];
+Object.entries(A.scenes.landsat).forEach(([y,v])=>SCENES.push({y,kind:'landsat',id:v[0],d:v[1]}));
+Object.entries(A.scenes.s2).forEach(([y,v])=>SCENES.push({y,kind:'s2',id:v[0],d:v[1]}));
+SCENES.push({y:'now',kind:'esri'});
+$('#tl').max=SCENES.length-1;$('#tl').value=SCENES.length-1;
+const PC='https://planetarycomputer.microsoft.com/api/data/v1/item/tiles/WebMercatorQuad/{z}/{x}/{y}@1x';
+function sceneUrl(s){if(s.kind==='s2')return `${PC}?collection=sentinel-2-l2a&item=${s.id}&assets=visual&asset_bidx=visual%7C1%2C2%2C3&nodata=0&format=png`;
+  return `${PC}?collection=landsat-c2-l2&item=${s.id}&assets=red&assets=green&assets=blue&color_formula=gamma+RGB+2.7%2C+saturation+1.5%2C+sigmoidal+RGB+15+0.55&nodata=0&format=png`;}
+let map;
+function initMap(){
+  if(!window.maplibregl){$('#map').innerHTML='<p style="color:#fff;padding:20px">The map library did not load. Check your connection.</p>';return;}
+  const streams={type:'FeatureCollection',features:A.streams.map(l=>({type:'Feature',properties:{km2:Math.max(...l.map(p=>p[2]))},geometry:{type:'LineString',coordinates:l.map(p=>[p[0],p[1]])}}))};
+  const ring=POLY.concat([POLY[0]]);
+  const corners={type:'FeatureCollection',features:A.geom.ll.map((p,i)=>({type:'Feature',properties:{n:String(i+1),i},geometry:{type:'Point',coordinates:[p[1],p[0]]}}))};
+  // qibla line: 3 km along bearing
+  const qEnd=(()=>{const d=3/6371,b=QIBLA*D2R,f1=C.lat*D2R,l1=C.lon*D2R;const f2=Math.asin(Math.sin(f1)*Math.cos(d)+Math.cos(f1)*Math.sin(d)*Math.cos(b));const l2=l1+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(f1),Math.cos(d)-Math.sin(f1)*Math.sin(f2));return [l2*R2D,f2*R2D];})();
+  map=new maplibregl.Map({container:'map',center:[C.lon,C.lat],zoom:16.3,maxZoom:19,attributionControl:{compact:true},
+    style:{version:8,
+      sources:{
+        esri:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},
+        hist:{type:'raster',tiles:[sceneUrl(SCENES[SCENES.length-2])],tileSize:256,maxzoom:16,attribution:'Sentinel-2 / Landsat via Microsoft Planetary Computer'},
+        dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,maxzoom:15,encoding:'terrarium',attribution:'Terrain: AWS Terrain Tiles'},
+        plot:{type:'geojson',data:{type:'Feature',geometry:{type:'Polygon',coordinates:[ring]}}},
+        streams:{type:'geojson',data:streams},
+        corners:{type:'geojson',data:corners},
+        qibla:{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:[[C.lon,C.lat],qEnd]}}}
+      },
+      layers:[
+        {id:'esri',type:'raster',source:'esri'},
+        {id:'hist',type:'raster',source:'hist',layout:{visibility:'none'}},
+        {id:'hill',type:'hillshade',source:'dem',layout:{visibility:'none'},paint:{'hillshade-exaggeration':0.35,'hillshade-shadow-color':'#2b1d0e'}},
+        {id:'streams',type:'line',source:'streams',paint:{'line-color':'#59b9ff','line-opacity':.9,'line-width':['interpolate',['linear'],['get','km2'],0.1,1.2,1,2.6,4.7,5]}},
+        {id:'plotfill',type:'fill',source:'plot',paint:{'fill-color':'#ffcf3d','fill-opacity':0.12}},
+        {id:'plotline',type:'line',source:'plot',paint:{'line-color':'#ffcf3d','line-width':3}},
+        {id:'qibla',type:'line',source:'qibla',layout:{visibility:'none'},paint:{'line-color':'#6ee7a6','line-width':3,'line-dasharray':[2,1.5]}}
+      ]}});
+  map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
+  map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
+  A.geom.ll.forEach((l,i)=>{const u=A.geom.utm[i];const el=document.createElement('button');el.className='cmark';el.textContent=i+1;el.setAttribute('aria-label','Corner '+(i+1));
+    el.addEventListener('click',ev=>ev.stopPropagation());
+    new maplibregl.Marker({element:el}).setLngLat([l[1],l[0]]).setPopup(new maplibregl.Popup({offset:14}).setHTML(`<b>Corner ${i+1}</b> · ${fmt(A.terrain.corners_elev[i])} m<br><span class="num">E ${u[0].toFixed(3)}<br>N ${u[1].toFixed(3)}<br>${l[0].toFixed(7)}, ${l[1].toFixed(7)}</span>`)).addTo(map);});
+  map.on('click',async e=>{const {lng,lat}=e.lngLat;const d=gc([C.lat,C.lon],[lat,lng])*1000;const pop=new maplibregl.Popup().setLngLat(e.lngLat).setHTML('Reading terrain…').addTo(map);
+    const z=await elevAt(lng,lat);const inside=pip(lng,lat,POLY);
+    pop.setHTML(`<b>${z==null?'–':fmt(z,0)+' m'}</b> above sea level<br>${inside?'Inside the plot':fmt(d)+' m from the plot centre'}<br><span class="num small">${lat.toFixed(5)}, ${lng.toFixed(5)}</span>`);});
+}
+function pip(x,y,P){let c=false;for(let a=0,b=P.length-1;a<P.length;b=a++){const[xi,yi]=P[a],[xj,yj]=P[b];if(((yi>y)!=(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c;}return c;}
+const tileCache={};
+async function elevAt(lng,lat){const z=14,n=2**z;const xf=(lng+180)/360*n,yf=(1-Math.log(Math.tan(lat*D2R)+1/Math.cos(lat*D2R))/Math.PI)/2*n;const x=Math.floor(xf),y=Math.floor(yf);const key=x+'/'+y;
+  try{if(!tileCache[key]){tileCache[key]=await new Promise((res,rej)=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.drawImage(im,0,0);res(g.getImageData(0,0,256,256).data);};im.onerror=rej;im.src=`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`;});}
+  const px=Math.floor((xf-x)*256),py=Math.floor((yf-y)*256);const d=tileCache[key],k=(py*256+px)*4;return d[k]*256+d[k+1]+d[k+2]/256-32768;}catch(e){return null;}}
+let is3d=false;
+$('#b3d').onclick=()=>{if(!map)return;is3d=!is3d;$('#b3d').classList.toggle('on',is3d);
+  if(is3d){map.setTerrain({source:'dem',exaggeration:1.8});map.setLayoutProperty('hill','visibility','visible');map.easeTo({pitch:65,bearing:-35,zoom:15.4,duration:1600});}
+  else{map.setTerrain(null);map.setLayoutProperty('hill','visibility','none');map.easeTo({pitch:0,bearing:0,zoom:16.3,duration:1200});}};
+$('#bstreams').onclick=()=>{const on=!$('#bstreams').classList.contains('on');$('#bstreams').classList.toggle('on',on);map&&map.setLayoutProperty('streams','visibility',on?'visible':'none');};
+$('#bqibla').onclick=()=>{const on=!$('#bqibla').classList.contains('on');$('#bqibla').classList.toggle('on',on);$('#lgq').style.display=on?'':'none';if(map){map.setLayoutProperty('qibla','visibility',on?'visible':'none');if(on)map.easeTo({zoom:14.6});}};
+let cornersShown=false;
+$('#bcorners').onclick=()=>{cornersShown=!cornersShown;$('#bcorners').classList.toggle('on',cornersShown);document.querySelectorAll('.cpop').forEach(p=>p.remove());if(!map)return;
+  if(cornersShown)A.geom.ll.forEach((l,i)=>{new maplibregl.Popup({closeButton:false,closeOnClick:false,className:'cpop',offset:12}).setLngLat([l[1],l[0]]).setHTML(`<b>${i+1}</b> <span class="num small">${l[0].toFixed(6)}, ${l[1].toFixed(6)}</span>`).addTo(map);});};
+let zoomedOut=false;
+$('#bzoom').onclick=()=>{zoomedOut=!zoomedOut;$('#bzoom').textContent=zoomedOut?'Zoom in':'Zoom out';map&&map.flyTo({center:zoomedOut?[46.53,24.72]:[C.lon,C.lat],zoom:zoomedOut?10.6:16.3,duration:2000});};
+$('#tl').addEventListener('input',()=>{const s=SCENES[+$('#tl').value];
+  if(s.kind==='esri'){$('#tllab').textContent='Today · high-res (Esri)';map&&map.setLayoutProperty('hist','visibility','none');return;}
+  $('#tllab').textContent=`${s.d} · ${s.kind==='s2'?'Sentinel-2, 10 m':'Landsat, 30 m'}`;
+  if(map){map.getSource('hist').setTiles([sceneUrl(s)]);map.setLayoutProperty('hist','visibility','visible');if(map.getZoom()>16)map.easeTo({zoom:15.5});}});
+
+/* ---------- sun controls ---------- */
+const today=new Date();const doyNow=Math.floor((Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate())-Date.UTC(today.getUTCFullYear(),0,0))/864e5);
+$('#doy').value=doyNow;$('#tod').value=600;['#doy','#tod','#objh'].forEach(s=>$(s).addEventListener('input',drawSun));
+
+/* ---------- nav highlight ---------- */
+const secs=[...document.querySelectorAll('main section[id]')];const links=[...document.querySelectorAll('#nav a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}),{rootMargin:'-40% 0px -55% 0px'});secs.forEach(s=>io.observe(s));
+
+function drawAll(){drawShape();surveyTable();drawTerrain();drawClimate();drawSun();drawSolar();drawSat();drawOptions();drawValue();}
+drawAll();initMap();
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(drawAll,200);});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawAll);
+</script>
+</body>
+</html>

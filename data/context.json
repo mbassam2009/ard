@@ -1,0 +1,12 @@
+{"lulc_source":"Impact Observatory / Esri 10 m annual land use land cover v02 (2017-2023), Microsoft Planetary Computer; % of pixels in circles around the plot centre",
+"lulc":{"2017":{"1000":{"bare":1.77,"rangeland":98.23},"3000":{"bare":25.99,"rangeland":74.01},"6000":{"built":0.41,"bare":33.51,"rangeland":65.99}},
+"2018":{"1000":{"bare":1.61,"rangeland":98.39},"3000":{"bare":25.69,"rangeland":74.31},"6000":{"built":0.54,"bare":32.11,"rangeland":67.31}},
+"2019":{"1000":{"bare":1.39,"rangeland":98.61},"3000":{"bare":24.83,"rangeland":75.17},"6000":{"built":0.88,"bare":30.17,"rangeland":68.94}},
+"2020":{"1000":{"bare":1.38,"rangeland":98.62},"3000":{"bare":24.58,"rangeland":75.42},"6000":{"built":0.91,"bare":29.66,"rangeland":69.42}},
+"2021":{"1000":{"bare":1.15,"rangeland":98.85},"3000":{"bare":24.19,"rangeland":75.81},"6000":{"built":1.29,"bare":29.03,"rangeland":69.67}},
+"2022":{"1000":{"bare":1.15,"rangeland":98.85},"3000":{"bare":23.35,"rangeland":76.65},"6000":{"built":1.2,"bare":28.22,"rangeland":70.59}},
+"2023":{"1000":{"bare":0.41,"rangeland":99.59},"3000":{"bare":18.92,"rangeland":81.08},"6000":{"built":1.83,"bare":22.11,"rangeland":76.06}}},
+"osm":{"date":"2026-11-15","buildings_within_3km":0,"nearest_mapped_road_m":2312,"places":[["Al Ammariyah (village)","العمارية",11163,24.79417,46.42333],["Diriyah governorate seat","محافظة الدرعية",18451,24.86637,46.35628]]},
+"prices":{"note":"Asking prices and registered-deal averages, Nov 2026. Not a valuation.",
+"raghdan_ammariyah_avg_sar_m2":362,"raghdan_ammariyah_deals":174,"raghdan_ammariyah_yoy_pct":-39.5,
+"listing_11756m2_50m_street_sar_m2":[700,800],"listing_20080m2_school_land_sar_m2":2000,"listings_small_farm_resthouse_sar_m2":[600,1400]}}
