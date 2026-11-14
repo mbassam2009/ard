@@ -611,12 +611,13 @@ function initMap(){
   const corners={type:'FeatureCollection',features:A.geom.ll.map((p,i)=>({type:'Feature',properties:{n:String(i+1),i},geometry:{type:'Point',coordinates:[p[1],p[0]]}}))};
   // qibla line: 3 km along bearing
   const qEnd=(()=>{const d=3/6371,b=QIBLA*D2R,f1=C.lat*D2R,l1=C.lon*D2R;const f2=Math.asin(Math.sin(f1)*Math.cos(d)+Math.cos(f1)*Math.sin(d)*Math.cos(b));const l2=l1+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(f1),Math.cos(d)-Math.sin(f1)*Math.sin(f2));return [l2*R2D,f2*R2D];})();
-  map=new maplibregl.Map({container:'map',center:[C.lon,C.lat],zoom:16.3,maxZoom:19,attributionControl:{compact:true},
+  map=new maplibregl.Map({container:'map',center:[C.lon,C.lat],zoom:16.3,maxZoom:19,maxPitch:70,attributionControl:{compact:true},
     style:{version:8,
       sources:{
         esri:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},
         hist:{type:'raster',tiles:[sceneUrl(SCENES[SCENES.length-2])],tileSize:256,maxzoom:16,attribution:'Sentinel-2 / Landsat via Microsoft Planetary Computer'},
-        dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,maxzoom:15,encoding:'terrarium',attribution:'Terrain: AWS Terrain Tiles'},
+        dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,maxzoom:14,encoding:'terrarium',attribution:'Terrain: AWS Terrain Tiles'},
+        dem3d:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,maxzoom:14,encoding:'terrarium'},
         plot:{type:'geojson',data:{type:'Feature',geometry:{type:'Polygon',coordinates:[ring]}}},
         streams:{type:'geojson',data:streams},
         corners:{type:'geojson',data:corners},
@@ -647,7 +648,7 @@ async function elevAt(lng,lat){const z=14,n=2**z;const xf=(lng+180)/360*n,yf=(1-
   const px=Math.floor((xf-x)*256),py=Math.floor((yf-y)*256);const d=tileCache[key],k=(py*256+px)*4;return d[k]*256+d[k+1]+d[k+2]/256-32768;}catch(e){return null;}}
 let is3d=false;
 $('#b3d').onclick=()=>{if(!map)return;is3d=!is3d;$('#b3d').classList.toggle('on',is3d);
-  if(is3d){map.setTerrain({source:'dem',exaggeration:1.8});map.setLayoutProperty('hill','visibility','visible');map.easeTo({pitch:65,bearing:-35,zoom:15.4,duration:1600});}
+  if(is3d){map.setLayoutProperty('hill','visibility','visible');map.setTerrain({source:'dem3d',exaggeration:1.8});map.once('idle',()=>map.easeTo({pitch:60,bearing:-35,zoom:15.2,duration:1600}));}
   else{map.setTerrain(null);map.setLayoutProperty('hill','visibility','none');map.easeTo({pitch:0,bearing:0,zoom:16.3,duration:1200});}};
 $('#bstreams').onclick=()=>{const on=!$('#bstreams').classList.contains('on');$('#bstreams').classList.toggle('on',on);map&&map.setLayoutProperty('streams','visibility',on?'visible':'none');};
 $('#bqibla').onclick=()=>{const on=!$('#bqibla').classList.contains('on');$('#bqibla').classList.toggle('on',on);$('#lgq').style.display=on?'':'none';if(map){map.setLayoutProperty('qibla','visibility',on?'visible':'none');if(on)map.easeTo({zoom:14.6});}};
