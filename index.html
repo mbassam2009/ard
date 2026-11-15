@@ -136,7 +136,7 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
 <header class="top"><div class="in">
   <a class="brand" href="#top">Ard<span class="ar">أرض</span></a>
   <nav class="links" id="nav">
-    <a href="#map-sec">Map</a><a href="#survey">Survey check</a><a href="#terrain">Terrain &amp; water</a><a href="#climate">Climate</a><a href="#sun">Sun &amp; qibla</a><a href="#solar">Solar</a><a href="#sat">Satellite record</a><a href="#options">What it could be</a><a href="#value">Value</a><a href="#method">Method</a>
+    <a href="#map-sec">Map</a><a href="#survey">Survey check</a><a href="#terrain">Terrain</a><a href="#ground">Groundwater</a><a href="#wadi">Wadi flow</a><a href="#soil">Soil &amp; planting</a><a href="#climate">Climate</a><a href="#sun">Sun &amp; qibla</a><a href="#solar">Solar</a><a href="#sat">Satellite record</a><a href="#options">What it could be</a><a href="#value">Value</a><a href="#method">Method</a>
   </nav>
   <button class="btn" id="theme" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button>
 </div></header>
@@ -159,20 +159,22 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
       <button class="btn on" id="bstreams">Drainage</button>
       <button class="btn" id="bqibla">Qibla</button>
       <button class="btn" id="bcorners">Corner coordinates</button>
+      <button class="btn" id="bgreen">Rain greening (Mar 2023)</button>
       <button class="btn" id="bzoom">Zoom out</button>
     </div>
     <div class="maplegend">
       <div><span class="sw" style="background:#ffcf3d"></span>Plot boundary</div>
       <div><span class="sw" style="background:#59b9ff"></span>Drainage (wider = bigger catchment)</div>
+      <div id="lgg" style="display:none"><span class="sw" style="background:linear-gradient(90deg,#ffffcc,#31a354)"></span>Greener after rain</div>
       <div id="lgq" style="display:none"><span class="sw" style="background:#6ee7a6"></span>Qibla direction</div>
     </div>
     <div class="timeline">
       <span class="small" style="opacity:.8">Time</span>
       <input type="range" id="tl" min="0" max="17" value="17" aria-label="Imagery year">
-      <span class="lab" id="tllab">Today · high-res (Esri)</span>
+      <span class="lab" id="tllab">15 Sep 2024 · WorldView-3 · 31 cm</span>
     </div>
   </div>
-  <p class="small muted" style="margin-top:8px">Old imagery is 30 m Landsat (1987 to 2014) and 10 m Sentinel-2 (2016 to 2026), loaded live from Microsoft Planetary Computer. The plot is about 8 Landsat pixels wide, so expect it to look soft.</p>
+  <p class="small muted" style="margin-top:8px">The slider mixes three archives: sharp Maxar/Vantor satellite photos from Esri's Wayback archive (8 captures, 2010 to 2024, 31 to 50 cm), 10 m Sentinel-2 (2016 to now, including the newest clear pass, found live) and 30 m Landsat back to 1987. The default view is the sharpest image that exists of the plot: WorldView-3, 15 Sep 2024.</p>
 </section>
 
 <section id="survey">
@@ -188,7 +190,7 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
 </section>
 
 <section id="terrain">
-  <h2>Terrain &amp; water <span class="ar">التضاريس والسيول</span></h2>
+  <h2>Terrain &amp; drainage <span class="ar">التضاريس والسيول</span></h2>
   <p class="lede">The plot is not flat. It sits on the back slope of one of the long limestone ridges west of Wadi Hanifa, with its north-west edge running along the ridge crest.</p>
   <div class="grid g4" id="ttiles"></div>
   <div class="grid g2" style="margin-top:16px">
@@ -202,6 +204,51 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
     <div class="flag"><span class="ic">!</span><div><b>Flattening it all would be a very big job.</b><span class="small" id="earthtxt"></span></div></div>
   </div>
   <p class="small muted">The survey lists the western neighbour as "plot 68 + wadi". At 30 m resolution the terrain model sees the ridge crest there, not a channel, so that wadi is either a small gully below 30 m scale or the valley at the foot of the ridge. Worth checking on the ground.</p>
+</section>
+
+<section id="ground">
+  <h2>Water underground <span class="ar">المياه الجوفية</span></h2>
+  <p class="lede">No satellite can see groundwater under a 3.6 ha plot. What the rock layers, the nearest measured wells and the land itself can tell you is below. The bottom line: the plot sits on a limestone ridge that sheds water, so any well would most likely be deep. The better bet for shallow water is the gravel in the wadi beds next to it.</p>
+  <div class="grid g2">
+    <div class="card"><div class="ctitle">The rock layers under the area</div><div class="csub">Central Tuwaiq Mountains, top to bottom. Hover a layer. Thicknesses from published sections; depths at the plot are not measured.</div><div class="chart" id="column"></div></div>
+    <div>
+      <div class="flag"><span class="ic">1</span><div><b>The surface rock is a poor aquifer.</b><span class="small">The ridges here belong to the Jurassic limestone belt of the Tuwaiq Mountains. The Tuwaiq Mountain Limestone is about 193 to 203 m thick and acts mostly as a barrier to water (an aquitard); the Hanifa limestone above it holds water only locally. Which of the two crops out on the plot itself needs the 1:250,000 Saudi Geological Survey sheet to settle.</span></div></div>
+      <div class="flag"><span class="ic">2</span><div><b>The big aquifer is very deep.</b><span class="small">Riyadh's main deep aquifer, the Minjur sandstone, starts about 1,200 m below the city. The rock layers rise gently toward the west, so it should be somewhat shallower under the plot, but still hundreds of metres down. The Dhruma layer between them also carries water.</span></div></div>
+      <div class="flag"><span class="ic">3</span><div><b>Nearby measured wells.</b><span class="small">In Wadi Nisah, south of Riyadh in the same kind of rock, the water level in 14 wells was 35 to 190 m below ground. Around Al-Jubailah in Wadi Hanifa, 40 to 55 km north-west of Riyadh (about 20 km north of the plot), farms pump from wells. In Wadi Hanifa itself the gravel aquifer was once reachable at about 10 m, before pumping drew it down.</span></div></div>
+      <div class="flag"><span class="ic">4</span><div><b>The region is losing groundwater.</b><span class="small">GRACE gravity satellites measure groundwater across central and northern Saudi Arabia falling by about 4 mm of water a year. That is a regional figure (hundreds of kilometres), not a reading for this plot.</span></div></div>
+      <div class="flag ok"><span class="ic">→</span><div><b>How to actually find out.</b><span class="small">A ground resistivity survey (ERT or TEM) along the wadi south-east of corner 3 and across the plot could show water-bearing gravel or fractured rock in a short field survey. Then a test borehole where the survey looks best. Drilling needs a permit from the Ministry of Environment, Water and Agriculture, which also keeps records of registered wells in the area.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="wadi">
+  <h2>Did the wadi flow? <span class="ar">هل جرى الوادي؟</span></h2>
+  <p class="lede">Desert ground greens for a few weeks wherever rain water collects. So I looked at the drainage channels around the plot before and after every storm since 2015, in 202 Sentinel-2 images, and in Sentinel-1 radar.</p>
+  <div class="grid g4" id="wtiles"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><div class="ctitle">Storms since 2015</div><div class="csub">3-day rain total (mm, ERA5) around each day with 8 mm or more</div><div class="chart" id="wStorms"></div></div>
+    <div class="card"><div class="ctitle">Channels green up after storms</div><div class="csub">How much greener the main channels were than the plot, at the greenest image within 70 days after each storm (NDVI difference). Before storms it is about zero.</div><div class="chart" id="wResp"></div></div>
+    <div class="card"><div class="ctitle">The closer to a channel, the more it greens</div><div class="csub">Average NDVI gain per 10 m pixel after the Nov 2018 and winter 2022–23 storms, by distance from the nearest channel</div><div class="chart" id="wDist"></div></div>
+    <div class="card"><h3>Verdict</h3><div id="wText" class="small"></div></div>
+  </div>
+</section>
+
+<section id="soil">
+  <h2>Soil &amp; planting <span class="ar">التربة والزراعة</span></h2>
+  <p class="lede">Can anything grow here? I scored every 10 m square of the plot on three things: how much it greened after rain (where water and soil collect), whether it looks like soil or bare rock from space, and how steep it is.</p>
+  <div class="grid g4" id="ptiles"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <div class="ctitle">Planting map, 10 m squares</div>
+      <div class="seg" id="pView" style="margin:6px 0 10px"><button data-v="score" class="on">Score</button><button data-v="g">Greening after rain</button><button data-v="br">Bare rock (brightness)</button><button data-v="slope">Slope</button></div>
+      <div class="chart" id="pmap"></div>
+      <div class="legend" id="plegend" style="margin-top:6px"></div>
+    </div>
+    <div>
+      <div class="card"><div class="ctitle">Soil model (SoilGrids, 250 m)</div><div class="csub">Sand / silt / clay by depth. A global model: on a bare ridge the real soil is thinner and stonier.</div><div class="chart" id="soilbars"></div><div class="kv" id="soilkv"></div></div>
+      <div class="card" style="margin-top:16px"><h3>What could grow, and how</h3><div class="small" id="plantText"></div></div>
+    </div>
+  </div>
 </section>
 
 <section id="climate">
@@ -304,6 +351,10 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
       <ul class="sources">
         <li>Survey sheet: Saif Engineering Consultation, plan 623, plot 67 (owner and deed details left out of this public page)</li>
         <li><a href="https://power.larc.nasa.gov/">NASA POWER</a> (Prediction Of Worldwide Energy Resources)</li>
+        <li>Imagery archive: <a href="https://livingatlas.arcgis.com/wayback/">Esri World Imagery Wayback</a> (Maxar / Vantor WorldView-2 and -3)</li>
+        <li>Soil: <a href="https://soilgrids.org/">ISRIC SoilGrids 2.0</a></li>
+        <li>Geology: <a href="https://agjsr.agu.edu.bh/publications/paper/275">Okla, Tuwaiq Mountain Limestone section west of Riyadh</a>; <a href="https://faculty.kfupm.edu.sa/ES/makkawi/ENVS%20521/Lectures/Module6.pdf">Makkawi, hydrogeologic units of Saudi Arabia (KFUPM)</a></li>
+        <li>Groundwater: <a href="https://pubs.usgs.gov/of/1982/0371/report.pdf">USGS OFR 82-371, Minjur aquifer, Riyadh</a>; <a href="https://jksus.org/?p=7973">Wadi Nisah resistivity study (JKSUS)</a>; <a href="https://www.mdpi.com/2073-4441/15/12/2220">Central Saudi groundwater quality, incl. Al-Jubailah (Water, 2023)</a>; <a href="https://etheses.durham.ac.uk/id/eprint/10170/">Al-Sobaihi, Water resources of Wadi Hanifah (Durham)</a>; <a href="https://www.esrs.wmich.edu/arcgis/rest/services/Saudi/GraceSaudi/MapServer">GRACE groundwater trends, Saudi Arabia (WMU)</a></li>
         <li><a href="https://open-meteo.com/en/docs/historical-weather-api">Open-Meteo historical API</a> (ECMWF ERA5)</li>
         <li><a href="https://planetarycomputer.microsoft.com/">Microsoft Planetary Computer</a>: Copernicus DEM GLO-30, Sentinel-2 L2A, Landsat Collection 2 L2, IO land cover</li>
         <li>Base imagery: Esri World Imagery. 3D terrain: AWS Terrain Tiles</li>
@@ -319,8 +370,9 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
 <footer>Ard (أرض) · built November 2026 · all computations reproducible from the repository. Not a survey, valuation or engineering study.</footer>
 
 <script src="data.js?v=2"></script>
+<script src="data_water.js?v=1"></script>
 <script>
-const A=window.ARD;
+const A=window.ARD, W=window.ARDW;
 const $=s=>document.querySelector(s);
 const fmt=(v,d=0)=>{if(d<0){const k=10**(-d);return (Math.round(v/k)*k).toLocaleString('en-US',{maximumFractionDigits:0});}return Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});};
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -594,14 +646,98 @@ function drawValue(){
 }
 $('#price').addEventListener('input',drawValue);
 
+/* ---------- groundwater ---------- */
+function drawGround(){
+  const host=$('#column');host.innerHTML='';
+  const L=[
+    {n:'Wadi gravel and sand',a:'Quaternary',t:'0 to a few m',h:22,role:'Shallow water after floods',col:'#d9c49a',d:'Fills the channels around the plot. In Wadi Hanifa this gravel once held water about 10 m down; it is the most likely place for shallow water near the plot.'},
+    {n:'Hanifa Formation',a:'Jurassic',t:'≈113 m',h:52,role:'Aquifer locally',col:'#c9b48a',d:'Limestone and calcarenite. Holds water only where it is fractured. One of the two candidates for the rock at the surface of the plot.'},
+    {n:'Tuwaiq Mountain Limestone',a:'Jurassic',t:'≈193–203 m',h:80,role:'Aquitard (blocks water)',col:'#b9a27a',d:'Dense limestone that forms the escarpments west of Riyadh. Mostly a barrier to water. The other candidate for the plot’s surface rock.'},
+    {n:'Dhruma Formation',a:'Jurassic',t:'hundreds of m',h:60,role:'Aquifer',col:'#a8916b',d:'Limestone and sandstone; deeper wells near Riyadh draw from it.'},
+    {n:'Marrat Formation',a:'Jurassic',t:'',h:34,role:'Aquitard',col:'#97805d',d:'Shale and limestone, a seal between the Dhruma and Minjur aquifers.'},
+    {n:'Minjur Sandstone',a:'Triassic',t:'74–138 m thick',h:50,role:'Main deep aquifer',col:'#7e9cc0',d:'Riyadh’s main deep aquifer, about 1,200 m below the city and tapped since 1956. Shallower under the plot, but still hundreds of metres down.'}];
+  const W=520,x0=150,bw=190;let y=10;const H=L.reduce((s,l)=>s+l.h,0)+30;
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Rock column'},host);const tip=document.createElement('div');tip.className='tip';tip.style.whiteSpace='normal';tip.style.maxWidth='260px';host.appendChild(tip);
+  L.forEach((l,i)=>{const r=svgEl('rect',{x:x0,y,width:bw,height:l.h-2,rx:4,fill:l.col},svg);
+    const t1=svgEl('text',{x:x0-10,y:y+l.h/2+4,'text-anchor':'end','font-size':12.5,fill:css('--ink'),'font-weight':600},svg);t1.textContent=l.n;
+    const t2=svgEl('text',{x:x0+bw+10,y:y+l.h/2,'font-size':11.5,fill:css('--muted')},svg);t2.textContent=l.role;
+    const t3=svgEl('text',{x:x0+bw+10,y:y+l.h/2+14,'font-size':10.5,fill:css('--faint'),'font-family':css('--font-num')},svg);t3.textContent=l.t;
+    if(i===1||i===2){const m=svgEl('text',{x:x0+bw/2,y:y+l.h/2+4,'text-anchor':'middle','font-size':11,fill:'#2b2418'},svg);m.textContent=i===1?'plot? ▸':'plot? ▸';}
+    const yy=y;r.addEventListener('pointerenter',()=>{const b=svg.getBoundingClientRect();tip.innerHTML=`<b>${l.n}</b> (${l.a})<br>${l.d}`;tip.style.left=((x0+bw/2)/W*b.width)+'px';tip.style.top=(yy/H*b.height)+'px';tip.style.opacity=1;});
+    r.addEventListener('pointerleave',()=>tip.style.opacity=0);y+=l.h;});
+  const n=svgEl('text',{x:x0+bw/2,y:H-6,'text-anchor':'middle','font-size':10.5,fill:css('--faint')},svg);n.textContent='not to scale · layers dip gently east';
+}
+/* ---------- wadi flow ---------- */
+function drawWadi(){
+  const w=W.water;const st=w.storms_since_2015_era5;const rs=w.channel_vs_plot_ndvi_excess;const gd=w.greening_by_distance;
+  tiles('#wtiles',[
+    {k:'Storms since 2015',v:st.length,n:'Days with 8 mm or more (ERA5)'},
+    {k:'Biggest 3-day rain',v:Math.max(...st.map(s=>s[1])).toFixed(0),u:'mm',n:'24–26 Nov 2015'},
+    {k:'Channel greening, best event',v:'+'+Math.max(...rs.map(r=>r[2])).toFixed(3),u:'NDVI',n:'Dec 2018, after the 10 Nov storm'},
+    {k:'Plot vs channels',v:Math.round(gd['plot']/gd['<30']*100)+'%',n:'Plot greens this much of what the channel edges do'},
+  ]);
+  chart('#wStorms',{x:st.map(s=>s[0].slice(2,7)),xEvery:2,yMin:0,series:[{name:'3-day rain',values:st.map(s=>s[1]),color:css('--s1'),type:'bar',fmt:v=>v.toFixed(1)+' mm'}],tipX:i=>st[i][0],yFmt:v=>v,height:210});
+  chart('#wResp',{x:rs.map(r=>r[1].slice(2,7)),xEvery:1,yMin:0,series:[{name:'Channel minus plot',values:rs.map(r=>r[2]),color:css('--s3'),type:'bar',fmt:v=>'+'+v.toFixed(3)}],tipX:i=>`storm ${rs[i][0]}, image ${rs[i][1]}`,yFmt:v=>v.toFixed(3),height:210});
+  const ks=['<30','30-60','60-120','>120','plot'];
+  chart('#wDist',{x:['< 30 m','30–60 m','60–120 m','> 120 m','The plot'],xEvery:1,yMin:0,series:[{name:'NDVI gain',values:ks.map(k=>gd[k]),color:css('--s3'),type:'bar',fmt:v=>'+'+v.toFixed(4)}],yFmt:v=>v.toFixed(3),height:210});
+  $('#wText').innerHTML=`<p><b>Yes. The channels around the plot carried water after most big storms.</b> After 7 of 10 storm periods with usable images, the main channels greened more than the slopes within weeks. The clearest cases were Nov 2015, Nov 2018, the wet winter of 2022–23 and May 2024. Before storms the two are the same.</p>
+  <p><b>The same places respond every time.</b> Pixel by pixel, the greening after the 2018 and 2023 storms matches (correlation 0.55). Ground within 30 m of a channel greens about 65 % more than ground over 120 m away. That is where water runs and soaks in.</p>
+  <p><b>The plot sheds water.</b> It greens the least of all, and only ${w.plot_share_in_top10pct_greening} % of its squares are among the greenest tenth of the area. That fits the terrain model: the plot is at the top of its own small catchment.</p>
+  <p class="muted"><b>Radar:</b> Sentinel-1 passes here every 12 days, at the same time of day. Only one pass caught the ground wet (13 Nov 2019, about +1.7 dB across the plot), so radar cannot time individual flows here. Turn on "Rain greening (Mar 2023)" on the map to see the channels light up.</p>`;
+}
+/* ---------- soil & planting ---------- */
+let pView='score';
+function drawSoil(){
+  const P=W.pixels;const A_=P.area;const c=P.classes;
+  tiles('#ptiles',[
+    {k:'Good for planting',v:fmt(c.good*A_,-2),u:'m²',n:`${Math.round(c.good/P.px.length*100)} % of the plot, mostly east & south-east`},
+    {k:'Possible with work',v:fmt(c.fair*A_,-2),u:'m²',n:'Pits, imported soil, water harvesting'},
+    {k:'Bare rock or too steep',v:fmt(c.poor*A_,-2),u:'m²',n:'Mostly the western ridge'},
+    {k:'Soil reaction',v:'pH 8',n:'Alkaline, low organic matter (SoilGrids)'},
+  ]);
+  // pixel map
+  const host=$('#pmap');host.innerHTML='';const is=P.px.map(p=>p.i),js=P.px.map(p=>p.j);const i0=Math.min(...is),i1=Math.max(...is),j0=Math.min(...js),j1=Math.max(...js);
+  const cs=17,pad=26,W_=(i1-i0+1)*cs+2*pad,H_=(j1-j0+1)*cs*(P.dy*110780)/(P.dx*101170)+2*pad;const ch=cs*(P.dy*110780)/(P.dx*101170);
+  const svg=svgEl('svg',{viewBox:`0 0 ${W_} ${H_}`,role:'img','aria-label':'Planting suitability map'},host);const tip=document.createElement('div');tip.className='tip';host.appendChild(tip);
+  const seq=['#e9f5e3','#c4e6b8','#94d08a','#5fb560','#33923f','#1c6e2c'];
+  const val=p=>pView==='score'?p.score:pView==='g'?Math.min(1,Math.max(0,(p.g+10)/60)):pView==='br'?Math.min(1,Math.max(0,(p.br-150)/200)):Math.min(1,p.slope/30);
+  const ramp=pView==='score'||pView==='g'?seq:['#f6efe3','#e8d6b5','#d9b986','#c99a5c','#a8743a','#7c5124'];
+  const col=v=>ramp[Math.min(5,Math.floor(v*6))];
+  P.px.forEach(p=>{const x=pad+(p.i-i0)*cs,y=pad+(p.j-j0)*ch;const r=svgEl('rect',{x:x+0.5,y:y+0.5,width:cs-1,height:ch-1,rx:2,fill:col(val(p))},svg);
+    r.addEventListener('pointerenter',()=>{const b=svg.getBoundingClientRect();tip.innerHTML=`Score ${p.score.toFixed(2)}<br>Greening +${(p.g/1000).toFixed(3)}<br>Slope ${p.slope}°<br>Brightness ${(p.br/1000).toFixed(2)}`;tip.style.left=((x+cs/2)/W_*b.width)+'px';tip.style.top=(y/H_*b.height)+'px';tip.style.opacity=1;});
+    r.addEventListener('pointerleave',()=>tip.style.opacity=0);});
+  // plot outline
+  const toXY=(lo,la)=>[pad+((lo-P.x0)/P.dx-0.5-i0+0.5)*cs,pad+((P.y1-la)/P.dy-0.5-j0+0.5)*ch];
+  svgEl('polygon',{points:A.geom.ll.map(l=>toXY(l[1],l[0]).join(',')).join(' '),fill:'none',stroke:css('--accent'),'stroke-width':2},svg);
+  A.geom.ll.forEach((l,i)=>{const [x,y]=toXY(l[1],l[0]);svgEl('circle',{cx:x,cy:y,r:8,fill:css('--ink')},svg);const t=svgEl('text',{x,y:y+4,'text-anchor':'middle','font-size':10,fill:css('--bg'),'font-weight':600},svg);t.textContent=i+1;});
+  const g=svgEl('g',{transform:`translate(${W_-16},22)`},svg);svgEl('path',{d:'M0,-14 L5,4 L0,1 L-5,4 Z',fill:css('--ink')},g);
+  const labs={score:['Poor','Good'],g:['No greening','Greened most'],br:['Darker (soil)','Bright (bare rock)'],slope:['Flat','30°+']};
+  $('#plegend').innerHTML=`<span>${labs[pView][0]}</span>${ramp.map(c=>`<i style="display:inline-block;width:22px;height:10px;background:${c};border-radius:2px"></i>`).join('')}<span>${labs[pView][1]}</span>`;
+  // soil bars
+  const sg=W.water.soilgrids;const sh=$('#soilbars');sh.innerHTML='';const Ws=520,Hs=150;const sv=svgEl('svg',{viewBox:`0 0 ${Ws} ${Hs}`,role:'img','aria-label':'Soil texture by depth'},sh);
+  const cols=[css('--s2'),css('--sand'),css('--s1')];
+  sg.depths.forEach((d,k)=>{let x=90;const y=8+k*27;const t=svgEl('text',{x:82,y:y+15,'text-anchor':'end','font-size':11,fill:css('--faint'),'font-family':css('--font-num')},sv);t.textContent=d+' cm';
+    [['sand',sg.sand[k]],['silt',sg.silt[k]],['clay',sg.clay[k]]].forEach(([nm,v],m)=>{const w_=(Ws-100)*v/100;svgEl('rect',{x:x+1,y,width:w_-2,height:20,rx:3,fill:cols[m]},sv);if(w_>40){const tt=svgEl('text',{x:x+w_/2,y:y+14,'text-anchor':'middle','font-size':10.5,fill:'#fff'},sv);tt.textContent=`${nm} ${Math.round(v)}%`;}x+=w_;});});
+  $('#soilkv').innerHTML=`<span>Texture</span><span>sandy clay loam</span><span>Stones and gravel</span><span>${Math.round(sg.gravel_vol[0])}–${Math.round(Math.max(...sg.gravel_vol))} % of volume</span><span>pH</span><span>${sg.ph[0]}–${sg.ph[4]}</span><span>Organic carbon</span><span>${(sg.soc_gkg[0]/10).toFixed(2)} % at the surface</span>`;
+  const good=P.px.filter(p=>p.score>=0.6);const ms=good.reduce((s,p)=>s+p.slope,0)/good.length;
+  const et=S.et0_mean;
+  $('#plantText').innerHTML=`<p><b>Yes, parts of it can be planted, but not as a farm.</b> About ${fmt(c.good*A_,-2)} m² scores well: mostly the gentler middle, east and south-east of the plot (average slope ${ms.toFixed(0)}°), where fine soil collects and the ground greens after rain. The bright western strip along the ridge is bare limestone.</p>
+  <p><b>Native desert trees and shrubs fit best:</b> sidr (سدر, <i>Ziziphus spina-christi</i>), talh (طلح, <i>Vachellia gerrardii</i>), samr (سمر, <i>Vachellia tortilis</i>), ghaf (غاف, <i>Prosopis cineraria</i>) and rimth (رمث, <i>Haloxylon salicornicum</i>). They survive on far less water than palms once established.</p>
+  <p><b>How:</b> dig half-moon pits or small stone check-dams on the good squares so each tree catches runoff from the slope above it. Fill the pits with wadi soil. Water by hand or drip for the first two summers. The air here can evaporate about ${fmt(et)} mm a year against roughly 40 to 75 mm of rain, so nothing grows without help at first.</p>`;
+}
+document.querySelectorAll('#pView button').forEach(b=>b.onclick=()=>{pView=b.dataset.v;document.querySelectorAll('#pView button').forEach(x=>x.classList.toggle('on',x===b));drawSoil();});
+
 /* ---------- map ---------- */
 const SCENES=[];
 Object.entries(A.scenes.landsat).forEach(([y,v])=>SCENES.push({y,kind:'landsat',id:v[0],d:v[1]}));
 Object.entries(A.scenes.s2).forEach(([y,v])=>SCENES.push({y,kind:'s2',id:v[0],d:v[1]}));
-SCENES.push({y:'now',kind:'esri'});
+W.wayback.slice(1).forEach(w=>SCENES.push({y:w[0].slice(0,4),kind:'wb',id:w[1],d:w[0],sensor:w[2],res:w[3]}));
+SCENES.sort((a,b)=>a.d<b.d?-1:1);
+SCENES.push({y:'now',kind:'esri',d:'2024-09-15'});
 $('#tl').max=SCENES.length-1;$('#tl').value=SCENES.length-1;
 const PC='https://planetarycomputer.microsoft.com/api/data/v1/item/tiles/WebMercatorQuad/{z}/{x}/{y}@1x';
-function sceneUrl(s){if(s.kind==='s2')return `${PC}?collection=sentinel-2-l2a&item=${s.id}&assets=visual&asset_bidx=visual%7C1%2C2%2C3&nodata=0&format=png`;
+function sceneUrl(s){if(s.kind==='wb')return `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/${s.id}/{z}/{y}/{x}`;
+  if(s.kind==='s2')return `${PC}?collection=sentinel-2-l2a&item=${s.id}&assets=visual&asset_bidx=visual%7C1%2C2%2C3&nodata=0&format=png`;
   return `${PC}?collection=landsat-c2-l2&item=${s.id}&assets=red&assets=green&assets=blue&color_formula=gamma+RGB+2.7%2C+saturation+1.5%2C+sigmoidal+RGB+15+0.55&nodata=0&format=png`;}
 let map;
 function initMap(){
@@ -615,7 +751,9 @@ function initMap(){
     style:{version:8,
       sources:{
         esri:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},
-        hist:{type:'raster',tiles:[sceneUrl(SCENES[SCENES.length-2])],tileSize:256,maxzoom:16,attribution:'Sentinel-2 / Landsat via Microsoft Planetary Computer'},
+        hist:{type:'raster',tiles:[sceneUrl(SCENES.find(s=>s.kind==='s2'))],tileSize:256,maxzoom:16,attribution:'Sentinel-2 / Landsat via Microsoft Planetary Computer'},
+        wb:{type:'raster',tiles:[sceneUrl(SCENES.find(s=>s.kind==='wb'))],tileSize:256,maxzoom:17,attribution:'Esri World Imagery Wayback, Maxar'},
+        green:{type:'raster',tiles:[`${PC}?collection=sentinel-2-l2a&item=${W.greenScene}&assets=B04&assets=B08&expression=${encodeURIComponent('(B08-B04)/(B08+B04-2000)')}&asset_as_band=true&rescale=0.07,0.16&colormap_name=ylgn&format=png`],tileSize:256,maxzoom:16,attribution:'Sentinel-2 NDVI, 6 Mar 2023'},
         dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,maxzoom:14,encoding:'terrarium',attribution:'Terrain: AWS Terrain Tiles'},
         dem3d:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,maxzoom:14,encoding:'terrarium'},
         plot:{type:'geojson',data:{type:'Feature',geometry:{type:'Polygon',coordinates:[ring]}}},
@@ -626,6 +764,8 @@ function initMap(){
       layers:[
         {id:'esri',type:'raster',source:'esri'},
         {id:'hist',type:'raster',source:'hist',layout:{visibility:'none'}},
+        {id:'wb',type:'raster',source:'wb',layout:{visibility:'none'}},
+        {id:'green',type:'raster',source:'green',layout:{visibility:'none'},paint:{'raster-opacity':0.85}},
         {id:'hill',type:'hillshade',source:'dem',layout:{visibility:'none'},paint:{'hillshade-exaggeration':0.35,'hillshade-shadow-color':'#2b1d0e'}},
         {id:'streams',type:'line',source:'streams',paint:{'line-color':'#59b9ff','line-opacity':.9,'line-width':['interpolate',['linear'],['get','km2'],0.1,1.2,1,2.6,4.7,5]}},
         {id:'plotfill',type:'fill',source:'plot',paint:{'fill-color':'#ffcf3d','fill-opacity':0.12}},
@@ -657,10 +797,17 @@ $('#bcorners').onclick=()=>{cornersShown=!cornersShown;$('#bcorners').classList.
   if(cornersShown)A.geom.ll.forEach((l,i)=>{new maplibregl.Popup({closeButton:false,closeOnClick:false,className:'cpop',offset:12}).setLngLat([l[1],l[0]]).setHTML(`<b>${i+1}</b> <span class="num small">${l[0].toFixed(6)}, ${l[1].toFixed(6)}</span>`).addTo(map);});};
 let zoomedOut=false;
 $('#bzoom').onclick=()=>{zoomedOut=!zoomedOut;$('#bzoom').textContent=zoomedOut?'Zoom in':'Zoom out';map&&map.flyTo({center:zoomedOut?[46.53,24.72]:[C.lon,C.lat],zoom:zoomedOut?10.6:16.3,duration:2000});};
-$('#tl').addEventListener('input',()=>{const s=SCENES[+$('#tl').value];
-  if(s.kind==='esri'){$('#tllab').textContent='Today · high-res (Esri)';map&&map.setLayoutProperty('hist','visibility','none');return;}
-  $('#tllab').textContent=`${s.d} · ${s.kind==='s2'?'Sentinel-2, 10 m':'Landsat, 30 m'}`;
-  if(map){map.getSource('hist').setTiles([sceneUrl(s)]);map.setLayoutProperty('hist','visibility','visible');if(map.getZoom()>16)map.easeTo({zoom:15.5});}});
+function showScene(){const s=SCENES[+$('#tl').value];if(!map)return;
+  map.setLayoutProperty('hist','visibility','none');map.setLayoutProperty('wb','visibility','none');
+  if(s.kind==='esri'){$('#tllab').textContent='15 Sep 2024 · WorldView-3 · 31 cm';return;}
+  if(s.kind==='wb'){$('#tllab').textContent=`${s.d} · ${s.sensor} · ${Math.round(s.res*100)} cm`;map.getSource('wb').setTiles([sceneUrl(s)]);map.setLayoutProperty('wb','visibility','visible');return;}
+  $('#tllab').textContent=`${s.d} · ${s.kind==='s2'?'Sentinel-2, 10 m':'Landsat, 30 m'}${s.latest?' (newest)':''}`;
+  map.getSource('hist').setTiles([sceneUrl(s)]);map.setLayoutProperty('hist','visibility','visible');if(map.getZoom()>16)map.easeTo({zoom:15.5});}
+$('#tl').addEventListener('input',showScene);
+// newest clear Sentinel-2 pass, found live
+(async()=>{try{const r=await fetch('https://planetarycomputer.microsoft.com/api/stac/v1/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({collections:['sentinel-2-l2a'],intersects:{type:'Point',coordinates:[C.lon,C.lat]},query:{'eo:cloud_cover':{lt:5}},sortby:[{field:'datetime',direction:'desc'}],limit:1})});const f=(await r.json()).features[0];
+  if(f&&!SCENES.some(s=>s.id===f.id)){const at=+$('#tl').value===SCENES.length-1;SCENES.splice(SCENES.length-1,0,{y:'latest',kind:'s2',id:f.id,d:f.properties.datetime.slice(0,10),latest:true});$('#tl').max=SCENES.length-1;if(at)$('#tl').value=SCENES.length-1;}}catch(e){}})();
+$('#bgreen').onclick=()=>{const on=!$('#bgreen').classList.contains('on');$('#bgreen').classList.toggle('on',on);$('#lgg').style.display=on?'':'none';if(map){map.setLayoutProperty('green','visibility',on?'visible':'none');if(on&&map.getZoom()>15.3)map.easeTo({zoom:14.8});}};
 
 /* ---------- sun controls ---------- */
 const today=new Date();const doyNow=Math.floor((Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate())-Date.UTC(today.getUTCFullYear(),0,0))/864e5);
@@ -670,7 +817,7 @@ $('#doy').value=doyNow;$('#tod').value=600;['#doy','#tod','#objh'].forEach(s=>$(
 const secs=[...document.querySelectorAll('main section[id]')];const links=[...document.querySelectorAll('#nav a')];
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}),{rootMargin:'-40% 0px -55% 0px'});secs.forEach(s=>io.observe(s));
 
-function drawAll(){drawShape();surveyTable();drawTerrain();drawClimate();drawSun();drawSolar();drawSat();drawOptions();drawValue();}
+function drawAll(){drawShape();surveyTable();drawTerrain();drawGround();drawWadi();drawSoil();drawClimate();drawSun();drawSolar();drawSat();drawOptions();drawValue();}
 drawAll();initMap();
 let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(drawAll,200);});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawAll);

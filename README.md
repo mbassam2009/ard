@@ -22,6 +22,10 @@ Owner, deed and ID numbers from the survey sheet are deliberately left out of th
 | Warming | ERA5 annual mean up 2.3 °C between 1950-79 and 1996-2025 (trend 0.47 °C per decade) |
 | Solar | 1,801 kWh per kWp per year on a single-axis tracker, 1,615 fixed at the best tilt (20 to 25° south) |
 | Satellite record | Greenness (NDVI) never above 0.11 since 2015: bare rock and gravel, nothing built or graded |
+| Sharpest imagery | 8 sub-metre captures in Esri's Wayback archive (2010 to 2024); newest is WorldView-3, 15 Sep 2024, 31 cm |
+| Wadi flow | After 7 of 10 storm periods since 2015 the channels around the plot greened more than the slopes (clearest: Nov 2015, Nov 2018, winter 2022-23, May 2024). Ground within 30 m of a channel greens 65 % more than ground 120 m away; the plot greens least |
+| Groundwater | Surface rock is Jurassic limestone (Hanifa / Tuwaiq Mountain), a poor aquifer. Riyadh's main deep aquifer (Minjur) is ~1,200 m under the city. Nearby wells in similar settings show water 35 to 190 m down. Best shallow prospect: the wadi gravel south-east of corner 3 |
+| Planting | ~5,900 m² (16 %) scores well for native trees (east and south-east, ~7° slope); ~16,000 m² is bare rock or too steep. SoilGrids: sandy clay loam, 21 to 26 % gravel, pH 8 |
 | Neighbourhood | 99 % open rangeland within 1 km; built-up land within 6 km grew from 0.41 % (2017) to 1.83 % (2023) |
 
 ![Terrain](images/terrain.png)
@@ -31,6 +35,9 @@ Owner, deed and ID numbers from the survey sheet are deliberately left out of th
 - **Map:** Esri imagery with the surveyed boundary, 3D terrain, drainage lines from the flow model, qibla direction, clickable corners with UTM and lat/lon, and a time slider through Landsat (1987 to 2014) and Sentinel-2 (2016 to 2026) loaded live from Microsoft Planetary Computer. Click anywhere for elevation and distance.
 - **Survey check:** the shape drawn to scale from the coordinates, with every side, angle and the area recomputed.
 - **Terrain and water:** cross-sections, slope and aspect breakdowns, flood exposure, earthworks.
+- **Groundwater:** the rock layers under the area, nearby measured wells, regional GRACE trend, and how to actually test for water.
+- **Did the wadi flow?:** every storm since 2015 against Sentinel-2 greening of the channels, greening by distance from channels, and a radar check.
+- **Soil and planting:** a 10 m planting map of the plot (greening after rain, bare rock, slope), SoilGrids texture, and what could grow.
 - **Climate:** average month, rain against evaporation, 75 years of warming, annual rain, very hot days, the wettest days on record.
 - **Sun and qibla:** sun position and shadow length for any date and time, sun-path diagram, qibla bearing (242.8°, 763 km).
 - **Solar:** monthly yield, best tilt, hour-by-month output, and a sizing calculator.
@@ -44,6 +51,7 @@ Owner, deed and ID numbers from the survey sheet are deliberately left out of th
 - `data/`: every dataset the site uses, as pulled (see below)
 - `analysis/geometry.py`: area, sides, angles, UTM to lat/lon check
 - `analysis/build_data.py`: earthworks, climatology, NDVI, and bundling into `data.js`
+- `analysis/build_water.py`, `data_water.js`: planting score per 10 m pixel and the water, soil and imagery data
 - `analysis/browser_pipeline.js`: the code that pulled and processed NASA POWER, the PV model, Sentinel-2 statistics, the DEM flow routing, ERA5, land cover and OpenStreetMap. It ran in a browser tab because the build machine could not reach those APIs directly
 
 ## Methods in short
