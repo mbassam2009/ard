@@ -172,10 +172,10 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px}
     <div class="timeline">
       <span class="small" style="opacity:.8">Time</span>
       <input type="range" id="tl" min="0" max="17" value="17" aria-label="Imagery year">
-      <span class="lab" id="tllab">15 Sep 2024 · WorldView-3 · 31 cm</span>
+      <span class="lab" id="tllab">15 Sep 2024 · WorldView-3 · shown at ≈1.1 m</span>
     </div>
   </div>
-  <p class="small muted" style="margin-top:8px">The slider mixes three archives: sharp Maxar/Vantor satellite photos from Esri's Wayback archive (8 captures, 2010 to 2024, 31 to 50 cm), 10 m Sentinel-2 (2016 to now, including the newest clear pass, found live) and 30 m Landsat back to 1987. The default view is the sharpest image that exists of the plot: WorldView-3, 15 Sep 2024.</p>
+  <p class="small muted" style="margin-top:8px">The slider mixes three archives: sharp Maxar/Vantor satellite photos from Esri's Wayback archive (8 captures, 2010 to 2024, 31 to 50 cm), 10 m Sentinel-2 (2016 to now, including the newest clear pass, found live) and 30 m Landsat back to 1987. The default view is the newest sharp image: WorldView-3, 15 Sep 2024. It was captured at 31 cm, but Esri only publishes this area down to zoom 17 (about 1.1 m per pixel), so zooming further just enlarges those pixels.</p>
 </section>
 
 <section id="survey">
@@ -800,8 +800,8 @@ let zoomedOut=false;
 $('#bzoom').onclick=()=>{zoomedOut=!zoomedOut;$('#bzoom').textContent=zoomedOut?'Zoom in':'Zoom out';map&&map.flyTo({center:zoomedOut?[46.53,24.72]:[C.lon,C.lat],zoom:zoomedOut?10.6:16.3,duration:2000});};
 function showScene(){const s=SCENES[+$('#tl').value];if(!map)return;
   map.setLayoutProperty('hist','visibility','none');map.setLayoutProperty('wb','visibility','none');
-  if(s.kind==='esri'){$('#tllab').textContent='15 Sep 2024 · WorldView-3 · 31 cm';return;}
-  if(s.kind==='wb'){$('#tllab').textContent=`${s.d} · ${s.sensor} · ${Math.round(s.res*100)} cm`;map.getSource('wb').setTiles([sceneUrl(s)]);map.setLayoutProperty('wb','visibility','visible');return;}
+  if(s.kind==='esri'){$('#tllab').textContent='15 Sep 2024 · WorldView-3 · shown at ≈1.1 m';return;}
+  if(s.kind==='wb'){$('#tllab').textContent=`${s.d} · ${s.sensor} · shown at ≈1.1 m`;map.getSource('wb').setTiles([sceneUrl(s)]);map.setLayoutProperty('wb','visibility','visible');return;}
   $('#tllab').textContent=`${s.d} · ${s.kind==='s2'?'Sentinel-2, 10 m':'Landsat, 30 m'}${s.latest?' (newest)':''}`;
   map.getSource('hist').setTiles([sceneUrl(s)]);map.setLayoutProperty('hist','visibility','visible');if(map.getZoom()>16)map.easeTo({zoom:15.5});}
 $('#tl').addEventListener('input',showScene);
