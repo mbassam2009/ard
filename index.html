@@ -751,7 +751,7 @@ function initMap(){
   map=new maplibregl.Map({container:'map',center:[C.lon,C.lat],zoom:16.3,maxZoom:19,maxPitch:70,attributionControl:{compact:true},
     style:{version:8,
       sources:{
-        esri:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},
+        esri:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:17,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},
         hist:{type:'raster',tiles:[sceneUrl(SCENES.find(s=>s.kind==='s2'))],tileSize:256,maxzoom:16,attribution:'Sentinel-2 / Landsat via Microsoft Planetary Computer'},
         wb:{type:'raster',tiles:[sceneUrl(SCENES.find(s=>s.kind==='wb'))],tileSize:256,maxzoom:17,attribution:'Esri World Imagery Wayback, Maxar'},
         green:{type:'raster',tiles:[`${PC}?collection=sentinel-2-l2a&item=${W.greenScene}&assets=B04&assets=B08&expression=${encodeURIComponent('(B08-B04)/(B08+B04-2000)')}&asset_as_band=true&rescale=0.07,0.16&colormap_name=ylgn&format=png`],tileSize:256,maxzoom:16,attribution:'Sentinel-2 NDVI, 6 Mar 2023'},
@@ -788,8 +788,8 @@ async function elevAt(lng,lat){const z=14,n=2**z;const xf=(lng+180)/360*n,yf=(1-
   try{if(!tileCache[key]){tileCache[key]=await new Promise((res,rej)=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.drawImage(im,0,0);res(g.getImageData(0,0,256,256).data);};im.onerror=rej;im.src=`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`;});}
   const px=Math.floor((xf-x)*256),py=Math.floor((yf-y)*256);const d=tileCache[key],k=(py*256+px)*4;return d[k]*256+d[k+1]+d[k+2]/256-32768;}catch(e){return null;}}
 let is3d=false;
-$('#b3d').onclick=()=>{if(!map)return;is3d=!is3d;$('#b3d').classList.toggle('on',is3d);
-  if(is3d){map.setLayoutProperty('hill','visibility','visible');map.setTerrain({source:'dem3d',exaggeration:1.8});map.once('idle',()=>map.easeTo({pitch:60,bearing:-35,zoom:15.2,duration:1600}));}
+$('#b3d').onclick=()=>{if(!map)return;if(!map.isStyleLoaded()){map.once('load',()=>$('#b3d').click());return;}is3d=!is3d;$('#b3d').classList.toggle('on',is3d);
+  if(is3d){map.setLayoutProperty('hill','visibility','visible');map.setTerrain({source:'dem3d',exaggeration:1.8});map.once('idle',()=>map.easeTo({pitch:60,bearing:-35,zoom:16.6,duration:1600}));}
   else{map.setTerrain(null);map.setLayoutProperty('hill','visibility','none');map.easeTo({pitch:0,bearing:0,zoom:16.3,duration:1200});}};
 $('#bstreams').onclick=()=>{const on=!$('#bstreams').classList.contains('on');$('#bstreams').classList.toggle('on',on);map&&map.setLayoutProperty('streams','visibility',on?'visible':'none');};
 $('#bqibla').onclick=()=>{const on=!$('#bqibla').classList.contains('on');$('#bqibla').classList.toggle('on',on);$('#lgq').style.display=on?'':'none';if(map){map.setLayoutProperty('qibla','visibility',on?'visible':'none');if(on)map.easeTo({zoom:14.6});}};
